@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="2"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/mainFragment"
+        android:name="com.funkytwig.tasktimer.MainFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        app:navGraph="@navigation/nav_graph" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/addEditFragment"
+        android:name="com.funkytwig.tasktimer.AddEditFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        app:navGraph="@navigation/nav_graph" />
+</LinearLayout>
