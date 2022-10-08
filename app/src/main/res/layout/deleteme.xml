@@ -15,11 +15,11 @@
         android:layout_weight="1"
         app:navGraph="@navigation/nav_graph" />
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/addEditFragment"
-        android:name="com.funkytwig.tasktimer.AddEditFragment"
+    <FrameLayout
+        android:id="@+id/task_details_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        app:navGraph="@navigation/nav_graph" />
+        android:layout_weight="1">
+
+    </FrameLayout>
 </LinearLayout>
