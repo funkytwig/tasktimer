@@ -3,9 +3,7 @@ package com.funkytwig.tasktimer
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
 import android.view.Menu
 import android.view.MenuItem
 import com.funkytwig.tasktimer.databinding.ActivityMainBinding
@@ -51,14 +49,14 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked { // NEW
         Log.d(TAG, func)
         val newFragment = AddEditFragment.newInstance(task)
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment, newFragment)
+            .replace(R.id.task_details_container, newFragment)
             .commit()
         Log.d(TAG, "$func done")
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.fragment)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
-    }
+//    override fun onSupportNavigateUp(): Boolean {
+//        val navController = findNavController(R.id.fragment)
+//        return navController.navigateUp(appBarConfiguration)
+//                || super.onSupportNavigateUp()
+//    }
 }
