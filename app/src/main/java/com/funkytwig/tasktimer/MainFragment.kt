@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import com.funkytwig.tasktimer.databinding.FragmentMainBinding
 
 
-private const val TAG = "MainFragment"
+private const val TAG = "XXMainFragment"
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -29,7 +29,6 @@ class MainFragment : Fragment() {
         Log.d(TAG, "onCreateView")
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

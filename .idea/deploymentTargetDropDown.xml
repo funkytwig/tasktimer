@@ -7,11 +7,11 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\login\.android\avd\Nexus_5X_API_26_nrew_perms_method.avd" />
+            <value value="C:\Users\login\.android\avd\Pixel_XL_API_26.avd" />
           </Key>
         </deviceKey>
       </Target>
     </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-10-05T22:28:22.396227300Z" />
+    <timeTargetWasSelectedWithDropDown value="2022-10-10T14:29:39.241228700Z" />
   </component>
 </project>
