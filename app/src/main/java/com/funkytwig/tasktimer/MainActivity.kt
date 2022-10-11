@@ -1,5 +1,6 @@
 package com.funkytwig.tasktimer
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,24 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
+
+        // Get up two pain display
+        mTwoPain = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container) // NEW
+        if (fragment != null) {// we have a fragment
+            // There was an existing fragment to edit/add a task so make sure pains are set up correctly
+            showEditPain()
+        } else { // no fragment
+            binding.contentMain.taskDetailsContainer.visibility =
+                if (mTwoPain) View.INVISIBLE else View.GONE
+            binding.contentMain.mainFragment.visibility = View.VISIBLE
+        }
+    }
+
+    fun showEditPain() {
+        binding.contentMain.taskDetailsContainer.visibility = View.VISIBLE // Show frame layout
+        // hide left pain if in single pain view
+        binding.contentMain.mainFragment.visibility = if (mTwoPain) View.VISIBLE else View.GONE
     }
 
     private fun removeEditPane(fragment: Fragment? = null) { // NEW
@@ -74,6 +93,7 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
         supportFragmentManager.beginTransaction()
             .replace(R.id.task_details_container, newFragment)
             .commit()
+        showEditPain()
         Log.d(TAG, "$func done")
     }
 
