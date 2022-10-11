@@ -7,7 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.funkytwig.tasktimer.databinding.FragmentAddEditBinding // NEW
+import androidx.appcompat.app.AppCompatActivity
+import com.funkytwig.tasktimer.databinding.FragmentAddEditBinding
 
 private const val TAG = "AddEditFragmentXX"
 
@@ -25,7 +26,7 @@ private const val ARG_TASK = "task"
  */
 
 class AddEditFragment : Fragment() {
-    private lateinit var binding: FragmentAddEditBinding // NEW
+    private lateinit var binding: FragmentAddEditBinding
 
     private var task: Task? = null
     private var listener: OnSaveClicked? = null
@@ -41,22 +42,19 @@ class AddEditFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.d(TAG, "onCreateView")
-
-        // binding = FragmentAddEditBinding.inflate(layoutInflater)
         binding = FragmentAddEditBinding.inflate(layoutInflater, container, false)
-
-
-        // Inflate the layout for this fragment
-        // return inflater.inflate(R.layout.fragment_add_edit, container, false)
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        val func = "onActivityCreated"
-        Log.d(TAG, func)
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG, "onViewCreated")
+        super.onViewCreated(view, savedInstanceState)
         binding.addEditSave.setOnClickListener { listener?.onSaveClicked() }
-        Log.d(TAG, "$func: addEditSave listner attached")
+
+        if (listener is AppCompatActivity) {
+            val actionBar = (listener as AppCompatActivity?)?.supportActionBar
+            actionBar?.setDisplayHomeAsUpEnabled(true)
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -104,11 +102,6 @@ class AddEditFragment : Fragment() {
     }
 
     // ** From here its just logging functions
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d(TAG, "onViewCreated")
-        super.onViewCreated(view, savedInstanceState)
-    }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         Log.d(TAG, "onViewStateRestored: called")

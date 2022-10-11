@@ -2,10 +2,8 @@ package com.funkytwig.tasktimer
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.ui.AppBarConfiguration
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -22,6 +20,7 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val func = "onCreate"
+        Log.d(TAG, func)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -29,7 +28,7 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
 
         // Get up two pain display
         mTwoPain = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container) // NEW
+        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
         if (fragment != null) {// we have a fragment
             // There was an existing fragment to edit/add a task so make sure pains are set up correctly
             showEditPain()
@@ -50,19 +49,19 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
     private fun removeEditPane(fragment: Fragment? = null) { // NEW
         Log.d(TAG, "removeEditPane")
         // This will work instead of passing fragment as arg but we will always have a reference
-        // to fragment before removing it unless Save button it tapped so makes sence to pass it in
+        // to fragment before removing it unless Save button it tapped so makes sense to pass it in
         // var fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
         if (fragment != null) {
             supportFragmentManager.beginTransaction()
                 .remove(fragment)
                 .commit()
         }
-
         // Set visibility of right-hand pane
         binding.contentMain.taskDetailsContainer.visibility =
             if (mTwoPain) View.INVISIBLE else View.GONE // GONE does not reserve space in display
         // Show left-hand pane
         binding.contentMain.mainFragment.visibility = View.VISIBLE
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
     override fun onSaveClicked() {
@@ -79,13 +78,18 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d(TAG, "onCreateOptionsMenu")
+        Log.d(TAG, "onOptionsItemSelected")
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        Log.d(TAG, item.itemId.toString())
         when (item.itemId) {
-            R.id.menumain_addTask -> taskEditAdd(null) // NEW
-            // R.id.menumain_settings -> true
+            R.id.menumain_addTask -> taskEditAdd(null)
+            android.R.id.home -> {
+                Log.d(TAG, "onOptionsItemSelected: home button pressed")
+                val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+                removeEditPane(fragment)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -101,13 +105,16 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
         Log.d(TAG, "$func done")
     }
 
-//    override fun onSupportNavigateUp(): Boolean {
-//        val navController = findNavController(R.id.fragment)
-//        return navController.navigateUp(appBarConfiguration)
-//                || super.onSupportNavigateUp()
-//    }
+    override fun onBackPressed() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+        if (fragment == null || mTwoPain) {
+            super.onBackPressed()
+        } else {
+            removeEditPane(fragment)
+        }
+    }
 
-    // ** From here its just logging functions **
+// ** From here its just logging functions **
 
     override fun onStart() {
         Log.d(TAG, "onStart")
