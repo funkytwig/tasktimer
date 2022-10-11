@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.funkytwig.tasktimer.databinding.FragmentAddEditBinding // NEW
 
-private const val TAG = "XXAddEditFragment"
+private const val TAG = "AddEditFragmentXX"
 
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_TASK = "task"
@@ -101,5 +101,52 @@ class AddEditFragment : Fragment() {
                     putParcelable(ARG_TASK, task)
                 }
             }
+    }
+
+    // ** From here its just logging functions
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG, "onViewCreated")
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onViewStateRestored: called")
+        super.onViewStateRestored(savedInstanceState)
+    }
+
+    override fun onStart() {
+        Log.d(TAG, "onStart")
+        super.onStart()
+    }
+
+    override fun onResume() {
+        Log.d(TAG, "onResume")
+        super.onResume()
+    }
+
+    override fun onPause() {
+        Log.d(TAG, "onPause")
+        super.onPause()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        Log.d(TAG, "onSaveInstanceState")
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onStop() {
+        Log.d(TAG, "onStop")
+        super.onStop()
+    }
+
+    override fun onDestroyView() {
+        Log.d(TAG, "onDestroyView")
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        Log.d(TAG, "onDestroy")
+        super.onDestroy()
     }
 }

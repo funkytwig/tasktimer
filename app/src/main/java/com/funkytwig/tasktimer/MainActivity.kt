@@ -2,6 +2,7 @@ package com.funkytwig.tasktimer
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.ui.AppBarConfiguration
@@ -11,7 +12,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.funkytwig.tasktimer.databinding.ActivityMainBinding
 
-private const val TAG = "XXMainActivity"
+private const val TAG = "MainActivityXX"
 
 class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
     private var mTwoPain = false // are we in two pain mode (tablet/landscape) NEW
@@ -39,7 +40,8 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
         }
     }
 
-    fun showEditPain() {
+    private fun showEditPain() {
+        Log.d(TAG, "showEditPain")
         binding.contentMain.taskDetailsContainer.visibility = View.VISIBLE // Show frame layout
         // hide left pain if in single pain view
         binding.contentMain.mainFragment.visibility = if (mTwoPain) View.VISIBLE else View.GONE
@@ -70,12 +72,14 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        Log.d(TAG, "onCreateOptionsMenu")
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d(TAG, "onCreateOptionsMenu")
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -102,4 +106,43 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
 //        return navController.navigateUp(appBarConfiguration)
 //                || super.onSupportNavigateUp()
 //    }
+
+    // ** From here its just logging functions **
+
+    override fun onStart() {
+        Log.d(TAG, "onStart")
+        super.onStart()
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        Log.d(TAG, "onRestoreInstanceState")
+        super.onRestoreInstanceState(savedInstanceState)
+    }
+
+
+    override fun onResume() {
+        Log.d(TAG, "onResume")
+        super.onResume()
+    }
+
+    override fun onPause() {
+        Log.d(TAG, "onPause")
+        super.onPause()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        Log.d(TAG, "onSaveInstanceState")
+        super.onSaveInstanceState(outState)
+    }
+
+
+    override fun onStop() {
+        Log.d(TAG, "onStop")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Log.d(TAG, "onDestroy")
+        super.onDestroy()
+    }
 }
