@@ -1,5 +1,6 @@
 package com.funkytwig.tasktimer
 
+import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -46,14 +47,81 @@ class AddEditFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d(TAG, "onViewCreated")
-        super.onViewCreated(view, savedInstanceState)
-        binding.addEditSave.setOnClickListener { listener?.onSaveClicked() }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val func = "onViewCreated"
+        Log.d(TAG, func)
+        super.onViewCreated(view, savedInstanceState)
+
+        // Add listner
+        binding.addEditSave.setOnClickListener {
+            saveTask()
+            listener?.onSaveClicked()
+        }
+
+        // Set up Up icon button on actionBar
         if (listener is AppCompatActivity) {
             val actionBar = (listener as AppCompatActivity?)?.supportActionBar
             actionBar?.setDisplayHomeAsUpEnabled(true)
+        }
+
+        // Populate fields if we are editing Task
+        if (savedInstanceState == null) { // this tels us fragment first created and we are not coming back to it
+            if (task != null) {
+                Log.d(TAG, "$func: found task, editing task ${task?.id}")
+                binding.addEditName.setText(task?.name)
+                binding.addEditDescription.setText(task?.description)
+                binding.addEditSorOrder.setText(task?.sortOrder.toString())
+            } else { // no task
+                Log.d(TAG, "$func: no task, adding new record ")
+            }
+        }
+    }
+
+
+    private fun saveTask() {
+        val func = "saveTaks"
+        Log.d(TAG, func)
+        // update if at least one field changes
+        val sortorder = if (binding.addEditSorOrder.text.isNotEmpty()) {
+            Integer.parseInt(binding.addEditSorOrder.text.toString())
+        } else {
+            0
+        }
+
+        val values = ContentValues()
+
+        if (task != null) { // editing existing task
+            if (binding.addEditName.text.toString() != task?.name)
+                values.put(TasksContract.Columns.TASK_NAME, binding.addEditName.text.toString())
+            if (binding.addEditDescription.text.toString() != task?.name)
+                values.put(
+                    TasksContract.Columns.TASK_DESCRIPTION,
+                    binding.addEditDescription.text.toString()
+                )
+            if (sortorder != task?.sortOrder)
+                values.put(TasksContract.Columns.TASK_SORT_ORDER, sortorder)
+
+            if (values.size() != 0) {
+                Log.d(TAG, "$func: save task")
+                activity?.contentResolver?.update(
+                    TasksContract.buildUriFromId(task!!.id), values, null, null
+                )
+            }
+
+        } else {
+
+            Log.d(TAG, "$func: adding new task")
+            if (binding.addEditName.text.isNotEmpty()) {
+                values.put(TasksContract.Columns.TASK_NAME, binding.addEditName.text.toString())
+                if (binding.addEditDescription.text.isNotEmpty())
+                    values.put(
+                        TasksContract.Columns.TASK_DESCRIPTION,
+                        binding.addEditDescription.text.toString()
+                    )
+                values.put(TasksContract.Columns.TASK_SORT_ORDER, sortorder) // defaults to 0
+            }
+            activity?.contentResolver?.insert(TasksContract.CONTENT_URI, values)
         }
     }
 

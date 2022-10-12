@@ -14,12 +14,11 @@ import androidx.core.content.ContentProviderCompat.requireContext
  * Provider for the TaskTimer app.  This is the only class that knows about [AppDatabase]
  */
 
-private const val TAG = "AppProvider"
+private const val TAG = "AppProviderXX"
 
 const val CONTENT_AUTHORITY = "com.funkytwig.tasktimer.provider" // unique provider name
 
 // The following constants are the integers returned by the UriMatched depending on the Uri.
-
 private val TASKS = 100
 private val TASKS_ID = 101
 
@@ -35,7 +34,7 @@ class AppProvider : ContentProvider() {
     private val uriMatcher by lazy { buildUriMatcher() }
 
     private fun buildUriMatcher(): UriMatcher { // Helps us parse out the table name
-        Log.d(TAG, "")
+        Log.d(TAG, "buildUriMatcher")
         val matcher = UriMatcher(UriMatcher.NO_MATCH) // NO_MATCH if root URi matched
 
         // com.funkytwig.tasktimer.provider/Tasks
