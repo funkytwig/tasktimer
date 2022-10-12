@@ -129,7 +129,10 @@ class AppProvider : ContentProvider() {
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
         // accepts a uri and return uri with ID added
         val func = "insert"
-        Log.d(TAG, func)
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, func)
+            logValues(values)
+        }
         if (values == null) throw IllegalAccessException("$func ContentValues can not be null")
 
         val recordId: Long
@@ -169,7 +172,11 @@ class AppProvider : ContentProvider() {
         selectionArgs: Array<out String>?
     ): Int {
         val func = "update"
-        Log.d(TAG, func)
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, "$func $uri")
+            logValues(values)
+        }
+
         if (values == null) throw IllegalAccessException("$func ContentValues can not be null")
 
         val count: Int
@@ -243,5 +250,11 @@ class AppProvider : ContentProvider() {
 
         Log.d(TAG, "Delete record Uri $uri Count $count")
         return count
+    }
+
+    private fun logValues(values: ContentValues?) {
+        for (key in values!!.keySet()) {
+            Log.d(TAG, "logValues:$key=${values.get(key)}")
+        }
     }
 }
