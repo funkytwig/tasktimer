@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.funkytwig.tasktimer.databinding.FragmentMainBinding
 
 
@@ -16,8 +17,9 @@ private const val TAG = "MainFragmentXX"
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class MainFragment : Fragment() {
-
     private var _binding: FragmentMainBinding? = null
+
+    private val mAdapter = CursorRecyclerViewAdapter(null) // null=view with instructions NEW
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -29,6 +31,14 @@ class MainFragment : Fragment() {
         Log.d(TAG, "onCreateView")
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG, "onViewCreated")
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.taskList.layoutManager = LinearLayoutManager(context) // Set layout manager to Linear NEW
+        binding.taskList.adapter = mAdapter // Attach Adapter to Recyclerview New
     }
 
     override fun onDestroyView() {
@@ -49,15 +59,10 @@ class MainFragment : Fragment() {
         super.onAttach(context)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d(TAG, "onViewCreated")
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        Log.d(TAG, "onActivityCreated(depreciated)")
-        super.onActivityCreated(savedInstanceState)
-    }
+//    override fun onActivityCreated(savedInstanceState: Bundle?) { // depreciated
+//        Log.d(TAG, "onActivityCreated(depreciated)")
+//        super.onActivityCreated(savedInstanceState)
+//    }
 
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

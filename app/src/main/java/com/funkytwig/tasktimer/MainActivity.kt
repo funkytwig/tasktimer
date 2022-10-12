@@ -13,7 +13,7 @@ import com.funkytwig.tasktimer.databinding.ActivityMainBinding
 private const val TAG = "MainActivityXX"
 
 class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
-    private var mTwoPain = false // are we in two pain mode (tablet/landscape) NEW
+    private var mTwoPain = false // are we in two pain mode (tablet/landscape)
 
     //    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
         binding.contentMain.mainFragment.visibility = if (mTwoPain) View.VISIBLE else View.GONE
     }
 
-    private fun removeEditPane(fragment: Fragment? = null) { // NEW
+    private fun removeEditPane(fragment: Fragment? = null) {
         Log.d(TAG, "removeEditPane")
         // This will work instead of passing fragment as arg but we will always have a reference
         // to fragment before removing it unless Save button it tapped so makes sense to pass it in
@@ -66,8 +66,8 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
 
     override fun onSaveClicked() {
         Log.d(TAG, "onSaveClicked")
-        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container) // NEW
-        removeEditPane(fragment) // NEW
+        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+        removeEditPane(fragment)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun taskEditAdd(task: Task?) { // NEW
+    private fun taskEditAdd(task: Task?) {
         val func = "taskEditAdd"
         Log.d(TAG, func)
         val newFragment = AddEditFragment.newInstance(task)
