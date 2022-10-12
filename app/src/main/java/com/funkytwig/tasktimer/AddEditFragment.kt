@@ -26,6 +26,16 @@ private const val ARG_TASK = "task"
  *
  */
 
+//inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+//    SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
+//    else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
+//}
+//
+//inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
+//    SDK_INT >= 33 -> getParcelable(key, T::class.java)
+//    else -> @Suppress("DEPRECATION") getParcelable(key) as? T
+//}
+
 class AddEditFragment : Fragment() {
     private lateinit var binding: FragmentAddEditBinding
 
@@ -35,7 +45,15 @@ class AddEditFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate")
         super.onCreate(savedInstanceState)
+        // Original code
         task = arguments?.getParcelable(ARG_TASK)
+
+//        // Suggested code but 'Unresolved reference: getParcelableExtra'
+//        if (Build.VERSION.SDK_INT >= 33) {
+//            task = arguments?.getParcelable(ARG_TASK, User.class)
+//        } else {
+//            task = arguments?.getParcelable(ARG_TASK)
+//        }
     }
 
     override fun onCreateView(
@@ -72,7 +90,7 @@ class AddEditFragment : Fragment() {
                 binding.addEditName.setText(task?.name)
                 binding.addEditDescription.setText(task?.description)
                 binding.addEditSorOrder.setText(task?.sortOrder.toString())
-            } else { // no task
+            } else { // Not editing Task, creating new one
                 Log.d(TAG, "$func: no task, adding new record ")
             }
         }
@@ -80,10 +98,10 @@ class AddEditFragment : Fragment() {
 
 
     private fun saveTask() {
-        val func = "saveTaks"
+        val func = "saveTask"
         Log.d(TAG, func)
         // update if at least one field changes
-        val sortorder = if (binding.addEditSorOrder.text.isNotEmpty()) {
+        val sortOrder = if (binding.addEditSorOrder.text.isNotEmpty()) {
             Integer.parseInt(binding.addEditSorOrder.text.toString())
         } else {
             0
@@ -99,8 +117,8 @@ class AddEditFragment : Fragment() {
                     TasksContract.Columns.TASK_DESCRIPTION,
                     binding.addEditDescription.text.toString()
                 )
-            if (sortorder != task?.sortOrder)
-                values.put(TasksContract.Columns.TASK_SORT_ORDER, sortorder)
+            if (sortOrder != task?.sortOrder)
+                values.put(TasksContract.Columns.TASK_SORT_ORDER, sortOrder)
 
             if (values.size() != 0) {
                 Log.d(TAG, "$func: save task")
@@ -119,7 +137,7 @@ class AddEditFragment : Fragment() {
                         TasksContract.Columns.TASK_DESCRIPTION,
                         binding.addEditDescription.text.toString()
                     )
-                values.put(TasksContract.Columns.TASK_SORT_ORDER, sortorder) // defaults to 0
+                values.put(TasksContract.Columns.TASK_SORT_ORDER, sortOrder) // defaults to 0
             }
             activity?.contentResolver?.insert(TasksContract.CONTENT_URI, values)
         }
@@ -133,7 +151,7 @@ class AddEditFragment : Fragment() {
             Log.d(TAG, "$func: Setting listner to context")
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnSaveClicked")
+            throw RuntimeException("$context must implement OnSaveClicked")
         }
     }
 

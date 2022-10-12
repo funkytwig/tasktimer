@@ -19,14 +19,14 @@ private const val TAG = "AppProviderXX"
 const val CONTENT_AUTHORITY = "com.funkytwig.tasktimer.provider" // unique provider name
 
 // The following constants are the integers returned by the UriMatched depending on the Uri.
-private val TASKS = 100
-private val TASKS_ID = 101
+private const val TASKS = 100
+private const val TASKS_ID = 101
 
-private val TIMINGS = 200
-private val TIMINGS_ID = 201
+private const val TIMINGS = 200
+private const val TIMINGS_ID = 201
 
-private val TASK_DURATIONS = 400
-private val TASK_DURATIONS_ID = 401
+private const val TASK_DURATIONS = 400
+private const val TASK_DURATIONS_ID = 401
 
 val CONTENT_PROVIDER_URI: Uri = Uri.parse("content://$CONTENT_AUTHORITY") // usable outside app
 
@@ -43,8 +43,8 @@ class AppProvider : ContentProvider() {
         matcher.addURI(CONTENT_AUTHORITY, "${TasksContract.TABLE_NAME}/#", TASKS_ID) // #=number
         matcher.addURI(CONTENT_AUTHORITY, TimingsContract.TABLE_NAME, TIMINGS)
         matcher.addURI(CONTENT_AUTHORITY, "${TimingsContract.TABLE_NAME}/#", TIMINGS_ID)
-//        matcher.addURI(CONTENT_ATHORITY, DurationsContract.TABLE_NAME, TASK_DURATION)
-//        matcher.addURI(CONTENT_ATHORITY, "${DurationsContract.TABLE_NAME}/#", TASK_DURATION_ID)
+//        matcher.addURI(CONTENT_AUTHORITY, DurationsContract.TABLE_NAME, TASK_DURATION)
+//        matcher.addURI(CONTENT_AUTHORITY, "${DurationsContract.TABLE_NAME}/#", TASK_DURATION_ID)
 
         return matcher
     }
@@ -114,7 +114,7 @@ class AppProvider : ContentProvider() {
 //                queryBuilder.appendWhereEscapeString("$durationId")
 //            }
 
-            else -> throw IllegalAccessException("Unknowed URI: $uri")
+            else -> throw IllegalAccessException("Unknown URI: $uri")
         }
 
         val context = requireContext(this) // Get NotNull context for ContentProvider
@@ -223,7 +223,7 @@ class AppProvider : ContentProvider() {
         var selectionCriteria: String
 
         val context = requireContext(this) // Get NotNull context for ContentProvider
-        // was told not to do this as its is 'slow' but thats only if thee is a problem (invalid Uri)
+        // was told not to do this as its is 'slow' but that's only if thee is a problem (invalid Uri)
         val db = AppDatabase.getInstance(context).writableDatabase
 
         val match = uriMatcher.match(uri)
