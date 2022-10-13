@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.funkytwig.tasktimer.databinding.FragmentMainBinding
 
@@ -18,12 +20,23 @@ private const val TAG = "MainFragmentXX"
  */
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
-
+    private val viewModel by lazy { ViewModelProvider(this)[TaskTimerViewModel::class.java] } // New
     private val mAdapter = CursorRecyclerViewAdapter(null) // null=view with instructions NEW
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        val funct = "onCreate"
+        Log.d(TAG, funct)
+        super.onCreate(savedInstanceState)
+        Log.d(TAG, "$funct about to register viewModel")
+        viewModel.cursor.observe( // New
+            this, Observer { cursor -> mAdapter.swapCursor(cursor)?.close() }
+        )
+        Log.d(TAG, "$funct done")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -37,7 +50,8 @@ class MainFragment : Fragment() {
         Log.d(TAG, "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
 
-        binding.taskList.layoutManager = LinearLayoutManager(context) // Set layout manager to Linear NEW
+        binding.taskList.layoutManager =
+            LinearLayoutManager(context) // Set layout manager to Linear NEW
         binding.taskList.adapter = mAdapter // Attach Adapter to Recyclerview New
     }
 
@@ -48,11 +62,6 @@ class MainFragment : Fragment() {
     }
 
     // ** From here ist just logging functions **
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(TAG, "onCreate")
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onAttach(context: Context) {
         Log.d(TAG, "onAttach")

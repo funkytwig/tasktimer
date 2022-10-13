@@ -118,10 +118,12 @@ class AppProvider : ContentProvider() {
         }
 
         val context = requireContext(this) // Get NotNull context for ContentProvider
+        Log.d(TAG, "$func: about to get db")
         val db = AppDatabase.getInstance(context).readableDatabase
+        Log.d(TAG, "$func: about to get cursor")
         val cursor =
             queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder)
-        Log.d(TAG, "query: rows in returned cursor = ${cursor.count}") // TODO remove this line
+        Log.d(TAG, "$func: rows in returned cursor = ${cursor.count}") // TODO remove this line
         return cursor
     }
 

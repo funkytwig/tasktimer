@@ -57,7 +57,7 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
                 cursor.getString(cursor.getColumnIndex(TasksContract.Columns.TASK_DESCRIPTION)),
                 cursor.getInt(cursor.getColumnIndex(TasksContract.Columns.TASK_SORT_ORDER))
             )
-            // Remember ID is not set in constructive
+            // Remember ID is not set in constructor
             task.id = cursor.getLong(cursor.getColumnIndex(TasksContract.Columns.ID))
 
             holder.taskListName.text = task.name
@@ -73,7 +73,7 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
         val count = cursor?.count
         if (count == 0 || cursor == null) {
             Log.d(TAG, "$func: no items so return 1")
-            return 1
+            return 1 // So Instructions are displayed if cursor empty
         } else {
             Log.d(TAG, "$func: $count items")
             return count!!.toInt()

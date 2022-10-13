@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import com.funkytwig.tasktimer.databinding.ActivityMainBinding
 
@@ -22,7 +23,9 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
         val func = "onCreate"
         Log.d(TAG, func)
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "$func: about to inflate ActivityMainBinding")
         binding = ActivityMainBinding.inflate(layoutInflater)
+        Log.d(TAG, "$func: inflated ActivityMainBinding")
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
                 if (mTwoPain) View.INVISIBLE else View.GONE
             binding.contentMain.mainFragment.visibility = View.VISIBLE
         }
+        Log.d(TAG, "$func done")
     }
 
     private fun showEditPain() {
