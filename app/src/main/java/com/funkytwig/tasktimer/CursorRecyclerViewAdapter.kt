@@ -5,27 +5,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.funkytwig.tasktimer.databinding.FragmentAddEditBinding
-
+import com.funkytwig.tasktimer.databinding.TaskListItemsBinding
 
 private const val TAG = "CurRecViewAdapterXX"
 
-//class TaskViewHolder(override val containerView: View) :
-//    RecyclerView.ViewHolder(containerView),
-//    LayoutContainer {
-//}
-
-
-class TaskViewHolder(private val containerView: View) :
-    RecyclerView.ViewHolder(containerView) {
-    var taskListName: TextView = containerView.findViewById(R.id.taskListName)
-    var taskListDescription: TextView = containerView.findViewById(R.id.taskListDescription)
-    var taskListEdit: ImageButton = containerView.findViewById(R.id.taskListEdit)
-    var taskListDelete: ImageButton = containerView.findViewById(R.id.taskListDelete)
+class TaskViewHolder(private val binding: TaskListItemsBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+    val taskListName: TextView = binding.taskListName
+    val taskListDescription: TextView = binding.taskListDescription
+    val taskListEdit: ImageButton = binding.taskListEdit
+    val taskListDelete: ImageButton = binding.taskListDelete
 }
 
 class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
@@ -36,9 +28,8 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
     // to find out more google 'Recyclerview getItemViewType
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         Log.d(TAG, "onCreateViewHolder (new view requested)")
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.task_list_items, parent, false)
-        return TaskViewHolder(view)
+        val viewHolder = TaskListItemsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return TaskViewHolder(viewHolder)
     }
 
     // When Recycler view wants new data to be displayed and is providing existing view to be reused
@@ -58,8 +49,7 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
 
         } else { // Cursor not empty
 
-            if (!cursor.moveToPosition(position))
-                throw IllegalStateException("Could not move cursor to position $position")
+            if (!cursor.moveToPosition(position)) throw IllegalStateException("Could not move cursor to position $position")
             // Create Task object from data in cursor
 
             val task = Task(
@@ -101,7 +91,7 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
      * @param newCursor The new cursor to be used if there was not one.
      * If the given new cursor is the same as the previous set cursor, null is also returned.
      */
-    fun swapcursor(newCursor: Cursor?): Cursor? {
+    fun swapCursor(newCursor: Cursor?): Cursor? {
         if (newCursor === cursor) return null
 
         val numItems = itemCount
@@ -118,5 +108,4 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
 
         return oldCursor
     }
-
 }
