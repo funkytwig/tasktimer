@@ -59,6 +59,7 @@ class AppProvider : ContentProvider() {
 
     override fun getType(uri: Uri): String? {
         val match = uriMatcher.match(uri)
+        Log.d(TAG,"getType match $match")
         return when (match) {
             TASKS -> TasksContract.CONTENT_TYPE
             TASKS_ID -> TasksContract.CONTENT_ITEM_TYPE
@@ -79,8 +80,8 @@ class AppProvider : ContentProvider() {
         sortOrder: String? // ORDER BY
     ): Cursor? {
         val func = "query"
+        Log.d(TAG, "$func for uri=$uri")
         val match = uriMatcher.match(uri)
-        Log.d(TAG, "$func: match=$match for uri=$uri")
 
         val queryBuilder = SQLiteQueryBuilder()
 
@@ -118,12 +119,10 @@ class AppProvider : ContentProvider() {
         }
 
         val context = requireContext(this) // Get NotNull context for ContentProvider
-        Log.d(TAG, "$func: about to get db")
         val db = AppDatabase.getInstance(context).readableDatabase
-        Log.d(TAG, "$func: about to get cursor")
         val cursor =
             queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder)
-        Log.d(TAG, "$func: rows in returned cursor = ${cursor.count}") // TODO remove this line
+        Log.d(TAG, "$func: ${cursor.count} rows returned") // TODO remove this line
         return cursor
     }
 

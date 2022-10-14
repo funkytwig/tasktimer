@@ -31,7 +31,6 @@ class MainFragment : Fragment() {
         val funct = "onCreate"
         Log.d(TAG, funct)
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "$funct about to register viewModel")
         viewModel.cursor.observe( // New
             this, Observer { cursor -> mAdapter.swapCursor(cursor)?.close() }
         )

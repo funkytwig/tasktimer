@@ -9,11 +9,11 @@ import android.util.Log
  * Basic Database class for aplicasion, only class that should use this is [AppProvider]
  */
 
-private const val TAG = "AppDatabaseXX"
+private const val TAG = "AppDatabase"
 private const val DATABASE_NAME = "TaskTimer.db"
 private const val DATABASE_VERSION = 3
 
-internal class AppDatabase private constructor(contect: Context) : // Change
+internal class AppDatabase private constructor(contect: Context) :
     SQLiteOpenHelper(contect, DATABASE_NAME, null, DATABASE_VERSION) {
 
     init { // TODO("Do NOT use this in production code")

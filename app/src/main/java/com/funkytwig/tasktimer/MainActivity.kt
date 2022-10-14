@@ -23,9 +23,7 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
         val func = "onCreate"
         Log.d(TAG, func)
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "$func: about to inflate ActivityMainBinding")
         binding = ActivityMainBinding.inflate(layoutInflater)
-        Log.d(TAG, "$func: inflated ActivityMainBinding")
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 

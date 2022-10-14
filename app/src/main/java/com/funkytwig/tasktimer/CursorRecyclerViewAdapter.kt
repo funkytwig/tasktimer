@@ -27,7 +27,7 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
     // viewType allows different types to be shows on different lines of view,
     // to find out more google 'Recyclerview getItemViewType
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        Log.d(TAG, "onCreateViewHolder (new view requested)")
+        Log.d(TAG, "onCreateViewHolder")
         val viewHolder = TaskListItemsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TaskViewHolder(viewHolder)
     }
@@ -35,23 +35,18 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
     // When Recycler view wants new data to be displayed and is providing existing view to be reused
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val func = "onBindViewHolder"
-        Log.d(TAG, "$func (bind data to view)")
-
         val cursor = cursor // Smart Cast Hack
 
         if (cursor == null || cursor.count == 0) { // No items in cursor
-
-            Log.d(TAG, "$func: providing instructions ")
+            Log.d(TAG, "$func: cursor empty")
             holder.taskListName.setText(R.string.instructions_heading)
             holder.taskListDescription.setText(R.string.instructions)
             holder.taskListEdit.visibility = View.GONE
             holder.taskListDelete.visibility = View.GONE
-
         } else { // Cursor not empty
-
+            Log.d(TAG, "$func: cursor NOT empty")
             if (!cursor.moveToPosition(position)) throw IllegalStateException("Could not move cursor to position $position")
             // Create Task object from data in cursor
-
             val task = Task(
                 cursor.getString(cursor.getColumnIndex(TasksContract.Columns.TASK_NAME)),
                 cursor.getString(cursor.getColumnIndex(TasksContract.Columns.TASK_DESCRIPTION)),
@@ -59,7 +54,6 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
             )
             // Remember ID is not set in constructor
             task.id = cursor.getLong(cursor.getColumnIndex(TasksContract.Columns.ID))
-
             holder.taskListName.text = task.name
             holder.taskListDescription.text = task.description
             holder.taskListEdit.visibility = View.VISIBLE // TODO: add onclick
@@ -69,7 +63,6 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
 
     override fun getItemCount(): Int {
         val func = "getItemCount"
-        Log.d(TAG, func)
         val count = cursor?.count
         if (count == 0 || cursor == null) {
             Log.d(TAG, "$func: no items so return 1")
@@ -92,15 +85,18 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
      * If the given new cursor is the same as the previous set cursor, null is also returned.
      */
     fun swapCursor(newCursor: Cursor?): Cursor? {
+        val func = "swapCursor"
         if (newCursor === cursor) return null
 
         val numItems = itemCount
         val oldCursor = cursor
 
         if (newCursor != null) {
+            Log.d(TAG, "$func new & previous cursor unchanged")
             // notify observer about cursor
             notifyDataSetChanged()
         } else { // cursor has changed
+            Log.d(TAG, "$func new & previous cursor different")
             // Notify observer about lack of dataset, all of it from 0 to newItems,
             // i.e. whole range of records has gone
             notifyItemRangeChanged(0, numItems)

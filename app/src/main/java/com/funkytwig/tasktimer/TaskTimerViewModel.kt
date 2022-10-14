@@ -30,7 +30,7 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
         val sortOrder =
             "${TasksContract.Columns.TASK_SORT_ORDER}, ${TasksContract.Columns.TASK_NAME}"
         val cursor = getApplication<Application>().contentResolver.query(
-            TasksContract.CONTENT_URI, null, null, projection, sortOrder
+            TasksContract.CONTENT_URI, projection, null, null, sortOrder
         )
         dbCursor.postValue(cursor!!) // Update on different thread
         Log.d(TAG, "$funct done")

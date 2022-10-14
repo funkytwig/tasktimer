@@ -26,16 +26,6 @@ private const val ARG_TASK = "task"
  *
  */
 
-//inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
-//    SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
-//    else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
-//}
-//
-//inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
-//    SDK_INT >= 33 -> getParcelable(key, T::class.java)
-//    else -> @Suppress("DEPRECATION") getParcelable(key) as? T
-//}
-
 class AddEditFragment : Fragment() {
     private lateinit var binding: FragmentAddEditBinding
 
@@ -110,24 +100,24 @@ class AddEditFragment : Fragment() {
         val values = ContentValues()
 
         if (task != null) { // editing existing task
-            if (binding.addEditName.text.toString() != task?.name)
+            if (binding.addEditName.text.toString() != task?.name) // Tasks.name changed
                 values.put(TasksContract.Columns.TASK_NAME, binding.addEditName.text.toString())
-            if (binding.addEditDescription.text.toString() != task?.name)
+            if (binding.addEditDescription.text.toString() != task?.name) // Taks.description changed
                 values.put(
                     TasksContract.Columns.TASK_DESCRIPTION,
                     binding.addEditDescription.text.toString()
                 )
-            if (sortOrder != task?.sortOrder)
+            if (sortOrder != task?.sortOrder) // Taks.sortOrder changed
                 values.put(TasksContract.Columns.TASK_SORT_ORDER, sortOrder)
 
-            if (values.size() != 0) {
+            if (values.size() != 0) { // update if anything to update
                 Log.d(TAG, "$func: save task")
                 activity?.contentResolver?.update(
                     TasksContract.buildUriFromId(task!!.id), values, null, null
                 )
             }
 
-        } else {
+        } else { // Task was not retrieved with getParcelable so new Task
 
             Log.d(TAG, "$func: adding new task")
             if (binding.addEditName.text.isNotEmpty()) {
