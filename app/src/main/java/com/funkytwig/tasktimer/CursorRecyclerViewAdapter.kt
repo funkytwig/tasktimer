@@ -1,6 +1,7 @@
 package com.funkytwig.tasktimer
 
 import android.database.Cursor
+import android.database.DatabaseUtils.dumpCursorToString
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -74,7 +75,7 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
     }
 
     /**
-     * Swap is a new cursor, returning the old cursor.
+     * Swap is a new cursor, returning the old cursor & tell observer it has changed.
      * The returned cursor is *not* closed
      *
      * This allows underlying cursor to be swapped if data changes and we need to re query
@@ -90,18 +91,18 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
 
         val numItems = itemCount
         val oldCursor = cursor
+        cursor = newCursor
 
         if (newCursor != null) {
             Log.d(TAG, "$func new & previous cursor unchanged")
-            // notify observer about cursor
+            // notify the observers about the new cursor
             notifyDataSetChanged()
-        } else { // cursor has changed
+        } else {
             Log.d(TAG, "$func new & previous cursor different")
             // Notify observer about lack of dataset, all of it from 0 to newItems,
             // i.e. whole range of records has gone
             notifyItemRangeChanged(0, numItems)
         }
-
         return oldCursor
     }
 }

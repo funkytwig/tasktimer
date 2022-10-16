@@ -23,6 +23,7 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
         val funct = "loadTasks"
         Log.d(TAG, funct)
         val projection = arrayOf(
+            TasksContract.Columns.ID,
             TasksContract.Columns.TASK_NAME,
             TasksContract.Columns.TASK_DESCRIPTION,
             TasksContract.Columns.TASK_SORT_ORDER
