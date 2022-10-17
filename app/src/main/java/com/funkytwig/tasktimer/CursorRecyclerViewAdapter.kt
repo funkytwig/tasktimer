@@ -18,6 +18,26 @@ class TaskViewHolder(private val binding: TaskListItemsBinding) :
     val taskListDescription: TextView = binding.taskListDescription
     val taskListEdit: ImageButton = binding.taskListEdit
     val taskListDelete: ImageButton = binding.taskListDelete
+
+    fun bind(task: Task) { // could do this in onBindViewHolder
+        taskListName.text = task.name
+        taskListDescription.text = task.description
+        taskListEdit.visibility = View.VISIBLE
+        taskListDelete.visibility = View.VISIBLE
+
+        taskListEdit.setOnClickListener {
+            Log.d(TAG, "Edit clicked ${task.name}")
+        }
+
+        taskListDelete.setOnClickListener {
+            Log.d(TAG, "Delete clicked ${task.name}")
+        }
+
+        binding. containerView.setOnLongClickListener {
+            Log.d(TAG, "long clicked view ${task.name}")
+            true
+        }
+    }
 }
 
 class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
@@ -28,7 +48,8 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
     // to find out more google 'Recyclerview getItemViewType
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         Log.d(TAG, "onCreateViewHolder")
-        val viewHolder = TaskListItemsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val viewHolder =
+            TaskListItemsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TaskViewHolder(viewHolder)
     }
 
@@ -54,10 +75,11 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
             )
             // Remember ID is not set in constructor
             task.id = cursor.getLong(cursor.getColumnIndex(TasksContract.Columns.ID))
-            holder.taskListName.text = task.name
-            holder.taskListDescription.text = task.description
-            holder.taskListEdit.visibility = View.VISIBLE // TODO: add onclick
-            holder.taskListDelete.visibility = View.VISIBLE // TODO: add onclick
+//            holder.taskListName.text = task.name
+//            holder.taskListDescription.text = task.description
+//            holder.taskListEdit.visibility = View.VISIBLE // TODO: add onclick
+//            holder.taskListDelete.visibility = View.VISIBLE // TODO: add onclick
+            holder.bind(task)
         }
     }
 
