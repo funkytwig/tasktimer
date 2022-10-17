@@ -50,6 +50,11 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
 
     }
 
+    fun deleteTask(taskId: Long) {
+        getApplication<Application>().contentResolver.delete(
+            TasksContract.buildUriFromId(taskId), null, null)
+    }
+
     override fun onCleared() {
         getApplication<Application>().contentResolver.unregisterContentObserver(contentObserver)
     }
