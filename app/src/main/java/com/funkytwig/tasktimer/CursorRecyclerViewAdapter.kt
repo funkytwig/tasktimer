@@ -1,7 +1,6 @@
 package com.funkytwig.tasktimer
 
 import android.database.Cursor
-import android.database.DatabaseUtils.dumpCursorToString
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View

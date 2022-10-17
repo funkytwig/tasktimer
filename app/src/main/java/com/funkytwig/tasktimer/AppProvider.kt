@@ -59,7 +59,7 @@ class AppProvider : ContentProvider() {
 
     override fun getType(uri: Uri): String? {
         val match = uriMatcher.match(uri)
-        Log.d(TAG, "getType match $match")
+        Log.d(TAG,"getType match $match")
         return when (match) {
             TASKS -> TasksContract.CONTENT_TYPE
             TASKS_ID -> TasksContract.CONTENT_ITEM_TYPE
@@ -161,11 +161,11 @@ class AppProvider : ContentProvider() {
             }
             else -> throw IllegalAccessException("Unknown Uri: $uri")
         }
-
-        if (recordId > 0) context.contentResolver?.notifyChange(uri, null) // NEW
         Log.d(TAG, "Created record Uri $returnUri")
+        if (recordId > 0) context.contentResolver?.notifyChange(uri, null)
         return returnUri
     }
+
 
     override fun update(
         uri: Uri,
@@ -252,7 +252,7 @@ class AppProvider : ContentProvider() {
         }
 
         Log.d(TAG, "Delete record Uri $uri Count $count")
-        if (count > 0) context.contentResolver?.notifyChange(uri, null) // NEW
+        if (count > 0) context.contentResolver?.notifyChange(uri, null)
         return count
     }
 

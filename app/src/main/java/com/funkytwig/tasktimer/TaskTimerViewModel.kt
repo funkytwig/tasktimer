@@ -13,7 +13,6 @@ import androidx.lifecycle.MutableLiveData
 private const val TAG = "TaskTimerViewModelXX"
 
 class TaskTimerViewModel(application: Application) : AndroidViewModel(application) {
-
     private val contentObserver = object : ContentObserver(Handler()) {
         override fun onChange(selfChange: Boolean, uri: Uri?) {
             loadTasks()
@@ -54,4 +53,5 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
     override fun onCleared() {
         getApplication<Application>().contentResolver.unregisterContentObserver(contentObserver)
     }
+
 }
