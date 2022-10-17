@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.funkytwig.tasktimer.databinding.FragmentAddEditBinding
 
 private const val TAG = "AddEditFragmentXX"
@@ -29,6 +30,7 @@ private const val ARG_TASK = "task"
 class AddEditFragment : Fragment() {
     private lateinit var binding: FragmentAddEditBinding
 
+    private val viewModel by lazy { ViewModelProvider(this)[TaskTimerViewModel::class.java] }
     private var task: Task? = null
     private var listener: OnSaveClicked? = null
 
@@ -86,51 +88,26 @@ class AddEditFragment : Fragment() {
         }
     }
 
+    private fun taskFromUi(): Task {
+        val sortOrder =
+            if (binding.addEditSorOrder.text.isNotEmpty()) Integer.parseInt(binding.addEditSorOrder.text.toString()) else 0
+        val newTask = Task(
+            binding.addEditName.text.toString(),
+            binding.addEditDescription.text.toString(),
+            sortOrder
+        )
+        newTask.id = task?.id ?: 0
+        return newTask
+    }
 
     private fun saveTask() {
-        val func = "saveTask"
-        Log.d(TAG, func)
-        // update if at least one field changes
-        val sortOrder = if (binding.addEditSorOrder.text.isNotEmpty()) {
-            Integer.parseInt(binding.addEditSorOrder.text.toString())
-        } else {
-            0
+        Log.d(TAG, "saveTask")
+        val newTask = taskFromUi()
+        if (newTask != task) { // not the same
+            task = viewModel.saveTask(newTask) // get task returned as amy have id
         }
 
-        val values = ContentValues()
 
-        if (task != null) { // editing existing task
-            if (binding.addEditName.text.toString() != task?.name) // Tasks.name changed
-                values.put(TasksContract.Columns.TASK_NAME, binding.addEditName.text.toString())
-            if (binding.addEditDescription.text.toString() != task?.name) // Taks.description changed
-                values.put(
-                    TasksContract.Columns.TASK_DESCRIPTION,
-                    binding.addEditDescription.text.toString()
-                )
-            if (sortOrder != task?.sortOrder) // Taks.sortOrder changed
-                values.put(TasksContract.Columns.TASK_SORT_ORDER, sortOrder)
-
-            if (values.size() != 0) { // update if anything to update
-                Log.d(TAG, "$func: save task")
-                activity?.contentResolver?.update(
-                    TasksContract.buildUriFromId(task!!.id), values, null, null
-                )
-            }
-
-        } else { // Task was not retrieved with getParcelable so new Task
-
-            Log.d(TAG, "$func: adding new task")
-            if (binding.addEditName.text.isNotEmpty()) {
-                values.put(TasksContract.Columns.TASK_NAME, binding.addEditName.text.toString())
-                if (binding.addEditDescription.text.isNotEmpty())
-                    values.put(
-                        TasksContract.Columns.TASK_DESCRIPTION,
-                        binding.addEditDescription.text.toString()
-                    )
-                values.put(TasksContract.Columns.TASK_SORT_ORDER, sortOrder) // defaults to 0
-            }
-            activity?.contentResolver?.insert(TasksContract.CONTENT_URI, values)
-        }
     }
 
     override fun onAttach(context: Context) {
