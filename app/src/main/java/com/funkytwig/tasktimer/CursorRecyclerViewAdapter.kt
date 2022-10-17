@@ -19,7 +19,7 @@ class TaskViewHolder(private val binding: TaskListItemsBinding) :
     val taskListEdit: ImageButton = binding.taskListEdit
     val taskListDelete: ImageButton = binding.taskListDelete
 
-    fun bind(task: Task) { // could do this in onBindViewHolder
+    fun bind(task: Task, listener: CursorRecyclerViewAdapter.OnTaskClickListner) { // could do this in onBindViewHolder
         taskListName.text = task.name
         taskListDescription.text = task.description
         taskListEdit.visibility = View.VISIBLE
@@ -27,21 +27,30 @@ class TaskViewHolder(private val binding: TaskListItemsBinding) :
 
         taskListEdit.setOnClickListener {
             Log.d(TAG, "Edit clicked ${task.name}")
+            listener.onEditClick(task)
         }
 
         taskListDelete.setOnClickListener {
             Log.d(TAG, "Delete clicked ${task.name}")
+            listener.onDelereClick(task)
         }
 
         binding. containerView.setOnLongClickListener {
             Log.d(TAG, "long clicked view ${task.name}")
+            listener.onTaskLongClick(task)
             true
         }
     }
 }
 
-class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
+class CursorRecyclerViewAdapter(private var cursor: Cursor?, val listener: OnTaskClickListner) : // Change
     RecyclerView.Adapter<TaskViewHolder>() {
+
+    interface OnTaskClickListner {
+        fun onEditClick(task: Task)
+        fun onDelereClick(task: Task)
+        fun onTaskLongClick(task: Task)
+    }
 
     // Called by Recyclerview when it needs new view to display
     // viewType allows different types to be shows on different lines of view,
@@ -75,11 +84,7 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
             )
             // Remember ID is not set in constructor
             task.id = cursor.getLong(cursor.getColumnIndex(TasksContract.Columns.ID))
-//            holder.taskListName.text = task.name
-//            holder.taskListDescription.text = task.description
-//            holder.taskListEdit.visibility = View.VISIBLE // TODO: add onclick
-//            holder.taskListDelete.visibility = View.VISIBLE // TODO: add onclick
-            holder.bind(task)
+            holder.bind(task, listener) // New
         }
     }
 
@@ -87,10 +92,8 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
         val func = "getItemCount"
         val count = cursor?.count
         if (count == 0 || cursor == null) {
-            Log.d(TAG, "$func: no items so return 1")
             return 1 // So Instructions are displayed if cursor empty
         } else {
-            Log.d(TAG, "$func: $count items")
             return count!!.toInt()
         }
     }

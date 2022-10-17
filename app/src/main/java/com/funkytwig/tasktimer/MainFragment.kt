@@ -18,10 +18,10 @@ private const val TAG = "MainFragmentXX"
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner { // change
     private var _binding: FragmentMainBinding? = null
     private val viewModel by lazy { ViewModelProvider(this)[TaskTimerViewModel::class.java] }
-    private val mAdapter = CursorRecyclerViewAdapter(null) // null=view with instructions
+    private val mAdapter = CursorRecyclerViewAdapter(null, this) // null=view with instructions // Change
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -60,56 +60,20 @@ class MainFragment : Fragment() {
         _binding = null
     }
 
-    // ** From here ist just logging functions **
-
     override fun onAttach(context: Context) {
         Log.d(TAG, "onAttach")
         super.onAttach(context)
     }
 
-//    override fun onActivityCreated(savedInstanceState: Bundle?) { // depreciated
-//        Log.d(TAG, "onActivityCreated(depreciated)")
-//        super.onActivityCreated(savedInstanceState)
-//    }
+    override fun onEditClick(task: Task) {
+        TODO("Not yet implemented")
+    }
 
+    override fun onDelereClick(task: Task) {
+        TODO("Not yet implemented")
+    }
 
-//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-//        Log.d(TAG, "onViewStateRestored")
-//        super.onViewStateRestored(savedInstanceState)
-//    }
-//
-//    override fun onStart() {
-//        Log.d(TAG, "onStart")
-//        super.onStart()
-//    }
-//
-//    override fun onResume() {
-//        Log.d(TAG, "onResume")
-//        super.onResume()
-//    }
-//
-//    override fun onPause() {
-//        Log.d(TAG, "onPause")
-//        super.onPause()
-//    }
-//
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        Log.d(TAG, "onSaveInstanceState")
-//        super.onSaveInstanceState(outState)
-//    }
-//
-//    override fun onStop() {
-//        Log.d(TAG, "onStop")
-//        super.onStop()
-//    }
-//
-//    override fun onDestroy() {
-//        Log.d(TAG, "onDestroy")
-//        super.onDestroy()
-//    }
-//
-//    override fun onDetach() {
-//        Log.d(TAG, "onDetach")
-//        super.onDetach()
-//    }
+    override fun onTaskLongClick(task: Task) {
+        TODO("Not yet implemented")
+    }
 }
