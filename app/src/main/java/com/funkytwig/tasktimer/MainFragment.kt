@@ -20,8 +20,8 @@ private const val TAG = "MainFragmentXX"
  */
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
-    private val viewModel by lazy { ViewModelProvider(this)[TaskTimerViewModel::class.java] } // New
-    private val mAdapter = CursorRecyclerViewAdapter(null) // null=view with instructions NEW
+    private val viewModel by lazy { ViewModelProvider(this)[TaskTimerViewModel::class.java] }
+    private val mAdapter = CursorRecyclerViewAdapter(null) // null=view with instructions
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -50,8 +50,8 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.taskList.layoutManager =
-            LinearLayoutManager(context) // Set layout manager to Linear NEW
-        binding.taskList.adapter = mAdapter // Attach Adapter to Recyclerview New
+            LinearLayoutManager(context) // Set layout manager to Linear
+        binding.taskList.adapter = mAdapter // Attach Adapter to Recyclerview
     }
 
     override fun onDestroyView() {
@@ -73,43 +73,43 @@ class MainFragment : Fragment() {
 //    }
 
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        Log.d(TAG, "onViewStateRestored")
-        super.onViewStateRestored(savedInstanceState)
-    }
-
-    override fun onStart() {
-        Log.d(TAG, "onStart")
-        super.onStart()
-    }
-
-    override fun onResume() {
-        Log.d(TAG, "onResume")
-        super.onResume()
-    }
-
-    override fun onPause() {
-        Log.d(TAG, "onPause")
-        super.onPause()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        Log.d(TAG, "onSaveInstanceState")
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onStop() {
-        Log.d(TAG, "onStop")
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        Log.d(TAG, "onDestroy")
-        super.onDestroy()
-    }
-
-    override fun onDetach() {
-        Log.d(TAG, "onDetach")
-        super.onDetach()
-    }
+//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+//        Log.d(TAG, "onViewStateRestored")
+//        super.onViewStateRestored(savedInstanceState)
+//    }
+//
+//    override fun onStart() {
+//        Log.d(TAG, "onStart")
+//        super.onStart()
+//    }
+//
+//    override fun onResume() {
+//        Log.d(TAG, "onResume")
+//        super.onResume()
+//    }
+//
+//    override fun onPause() {
+//        Log.d(TAG, "onPause")
+//        super.onPause()
+//    }
+//
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        Log.d(TAG, "onSaveInstanceState")
+//        super.onSaveInstanceState(outState)
+//    }
+//
+//    override fun onStop() {
+//        Log.d(TAG, "onStop")
+//        super.onStop()
+//    }
+//
+//    override fun onDestroy() {
+//        Log.d(TAG, "onDestroy")
+//        super.onDestroy()
+//    }
+//
+//    override fun onDetach() {
+//        Log.d(TAG, "onDetach")
+//        super.onDetach()
+//    }
 }

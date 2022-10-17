@@ -1,7 +1,10 @@
 package com.funkytwig.tasktimer
 
 import android.app.Application
+import android.database.ContentObserver
 import android.database.Cursor
+import android.net.Uri
+import android.os.Handler
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -10,12 +13,22 @@ import androidx.lifecycle.MutableLiveData
 private const val TAG = "TaskTimerViewModelXX"
 
 class TaskTimerViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val contentObserver = object : ContentObserver(Handler()) {
+        override fun onChange(selfChange: Boolean, uri: Uri?) {
+            loadTasks()
+        }
+    }
+
     private val dbCursor = MutableLiveData<Cursor>()
     val cursor: LiveData<Cursor>
         get() = dbCursor
 
     init {
         Log.d(TAG, "init")
+        getApplication<Application>().contentResolver.registerContentObserver(
+            TasksContract.CONTENT_URI,true, contentObserver
+        )
         loadTasks()
     }
 
@@ -36,5 +49,9 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
         dbCursor.postValue(cursor!!) // Update on different thread
         Log.d(TAG, "$funct done")
 
+    }
+
+    override fun onCleared() {
+        getApplication<Application>().contentResolver.unregisterContentObserver(contentObserver)
     }
 }
