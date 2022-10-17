@@ -18,10 +18,16 @@ private const val TAG = "MainFragmentXX"
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner { // change
+class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner {
+
+    interface OnTaskEdit {
+        fun onTaskEdit(task: Task)
+    }
+
     private var _binding: FragmentMainBinding? = null
     private val viewModel by lazy { ViewModelProvider(this)[TaskTimerViewModel::class.java] }
-    private val mAdapter = CursorRecyclerViewAdapter(null, this) // null=view with instructions // Change
+    private val mAdapter =
+        CursorRecyclerViewAdapter(null, this) // null=view with instructions // Change
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -32,8 +38,7 @@ class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner { 
         Log.d(TAG, funct)
         super.onCreate(savedInstanceState)
         viewModel.cursor.observe( // New
-            this, Observer { cursor -> mAdapter.swapCursor(cursor)?.close() }
-        )
+            this, Observer { cursor -> mAdapter.swapCursor(cursor)?.close() })
         Log.d(TAG, "$funct done")
     }
 
@@ -63,13 +68,14 @@ class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner { 
     override fun onAttach(context: Context) {
         Log.d(TAG, "onAttach")
         super.onAttach(context)
+        if (context !is OnTaskEdit) throw RuntimeException("${context.toString()} must implement OnTaskEdit")
     }
 
     override fun onEditClick(task: Task) {
-        TODO("Not yet implemented")
+        (activity as OnTaskEdit?)?.onTaskEdit(task) // think we do it like this as cant get listner passed to Fragment
     }
 
-    override fun onDelereClick(task: Task) {
+    override fun onDeleteClick(task: Task) {
         TODO("Not yet implemented")
     }
 

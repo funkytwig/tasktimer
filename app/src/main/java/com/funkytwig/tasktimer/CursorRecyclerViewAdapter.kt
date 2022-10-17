@@ -32,7 +32,7 @@ class TaskViewHolder(private val binding: TaskListItemsBinding) :
 
         taskListDelete.setOnClickListener {
             Log.d(TAG, "Delete clicked ${task.name}")
-            listener.onDelereClick(task)
+            listener.onDeleteClick(task)
         }
 
         binding. containerView.setOnLongClickListener {
@@ -48,7 +48,7 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?, val listener: OnTas
 
     interface OnTaskClickListner {
         fun onEditClick(task: Task)
-        fun onDelereClick(task: Task)
+        fun onDeleteClick(task: Task)
         fun onTaskLongClick(task: Task)
     }
 

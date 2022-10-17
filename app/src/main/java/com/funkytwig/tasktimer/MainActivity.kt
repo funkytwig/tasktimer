@@ -13,7 +13,7 @@ import com.funkytwig.tasktimer.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivityXX"
 
-class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
+class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainFragment.OnTaskEdit {
     private var mTwoPain = false // are we in two pain mode (tablet/landscape)
 
     //    private lateinit var appBarConfiguration: AppBarConfiguration
@@ -96,6 +96,11 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
         return super.onOptionsItemSelected(item)
     }
 
+    // doing it like this rather tan renaming taskEditAdd to onTaskEdit so we get error if null passed
+    override fun onTaskEdit(task: Task) {
+        taskEditAdd(task)
+    }
+
     private fun taskEditAdd(task: Task?) {
         val func = "taskEditAdd"
         Log.d(TAG, func)
@@ -114,44 +119,5 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
         } else {
             removeEditPane(fragment)
         }
-    }
-
-// ** From here its just logging functions **
-
-    override fun onStart() {
-        Log.d(TAG, "onStart")
-        super.onStart()
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        Log.d(TAG, "onRestoreInstanceState")
-        super.onRestoreInstanceState(savedInstanceState)
-    }
-
-
-    override fun onResume() {
-        Log.d(TAG, "onResume")
-        super.onResume()
-    }
-
-    override fun onPause() {
-        Log.d(TAG, "onPause")
-        super.onPause()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        Log.d(TAG, "onSaveInstanceState")
-        super.onSaveInstanceState(outState)
-    }
-
-
-    override fun onStop() {
-        Log.d(TAG, "onStop")
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        Log.d(TAG, "onDestroy")
-        super.onDestroy()
     }
 }
