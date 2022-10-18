@@ -8,8 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.funkytwig.tasktimer.databinding.FragmentMainBinding
 
@@ -26,6 +24,7 @@ class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner {
     }
 
     private var _binding: FragmentMainBinding? = null
+
     //private val viewModel by lazy { ViewModelProvider(this)[TaskTimerViewModel::class.java] }
     private val viewModel: TaskTimerViewModel by activityViewModels() // scope=activity
 
@@ -37,17 +36,16 @@ class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner {
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val funct = "onCreate"
-        Log.d(TAG, funct)
+        val func = "onCreate"
+        Log.d(TAG, func)
         super.onCreate(savedInstanceState)
-        viewModel.cursor.observe( // New
-            this, Observer { cursor -> mAdapter.swapCursor(cursor)?.close() })
-        Log.d(TAG, "$funct done")
+        viewModel.cursor.observe(this) { cursor -> mAdapter.swapCursor(cursor)?.close() }
+        Log.d(TAG, "$func done")
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         Log.d(TAG, "onCreateView")
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
@@ -71,7 +69,7 @@ class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner {
     override fun onAttach(context: Context) {
         Log.d(TAG, "onAttach")
         super.onAttach(context)
-        if (context !is OnTaskEdit) throw RuntimeException("${context.toString()} must implement OnTaskEdit")
+        if (context !is OnTaskEdit) throw RuntimeException("$context must implement OnTaskEdit")
     }
 
     override fun onEditClick(task: Task) {

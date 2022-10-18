@@ -1,6 +1,5 @@
 package com.funkytwig.tasktimer
 
-import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import com.funkytwig.tasktimer.databinding.FragmentAddEditBinding
 
 private const val TAG = "AddEditFragmentXX"
@@ -53,7 +51,7 @@ class AddEditFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         Log.d(TAG, "onCreateView")
         binding = FragmentAddEditBinding.inflate(layoutInflater, container, false)
         return binding.root

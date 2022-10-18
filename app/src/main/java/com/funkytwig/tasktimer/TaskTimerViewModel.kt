@@ -37,23 +37,23 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun loadTasks() {
-        val funct = "loadTasks"
-        Log.d(TAG, funct)
+        val func = "loadTasks"
+        Log.d(TAG, func)
         val projection = arrayOf(
             TasksContract.Columns.ID,
             TasksContract.Columns.TASK_NAME,
             TasksContract.Columns.TASK_DESCRIPTION,
             TasksContract.Columns.TASK_SORT_ORDER
         )
-        val sortOrder =
+        val sortOrder =// set sortOrder so cursor is in correct order
             "${TasksContract.Columns.TASK_SORT_ORDER}, ${TasksContract.Columns.TASK_NAME}"
         viewModelScope.launch(Dispatchers.IO) {
             val cursor = getApplication<Application>().contentResolver.query(
                 TasksContract.CONTENT_URI, projection, null, null, sortOrder
             )
-            dbCursor.postValue(cursor!!) // Update on different thread
+            dbCursor.postValue(cursor!!) // runs setValue via Handler in MainThread
         }
-        Log.d(TAG, "$funct done")
+        Log.d(TAG, "$func done")
 
     }
 

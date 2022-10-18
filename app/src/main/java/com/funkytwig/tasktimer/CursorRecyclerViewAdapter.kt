@@ -89,7 +89,6 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?, val listener: OnTas
     }
 
     override fun getItemCount(): Int {
-        val func = "getItemCount"
         val count = cursor?.count
         if (count == 0 || cursor == null) {
             return 1 // So Instructions are displayed if cursor empty
