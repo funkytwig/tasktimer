@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.funkytwig.tasktimer.databinding.FragmentAddEditBinding
 
@@ -30,7 +31,8 @@ private const val ARG_TASK = "task"
 class AddEditFragment : Fragment() {
     private lateinit var binding: FragmentAddEditBinding
 
-    private val viewModel by lazy { ViewModelProvider(this)[TaskTimerViewModel::class.java] }
+    //private val viewModel by lazy { ViewModelProvider(this)[TaskTimerViewModel::class.java] }
+    private val viewModel: TaskTimerViewModel by activityViewModels() // scope=activity
     private var task: Task? = null
     private var listener: OnSaveClicked? = null
 

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,7 +26,9 @@ class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner {
     }
 
     private var _binding: FragmentMainBinding? = null
-    private val viewModel by lazy { ViewModelProvider(this)[TaskTimerViewModel::class.java] }
+    //private val viewModel by lazy { ViewModelProvider(this)[TaskTimerViewModel::class.java] }
+    private val viewModel: TaskTimerViewModel by activityViewModels() // scope=activity
+
     private val mAdapter =
         CursorRecyclerViewAdapter(null, this) // null=view with instructions // Change
 
