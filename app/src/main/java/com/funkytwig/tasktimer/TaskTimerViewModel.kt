@@ -48,16 +48,16 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
         val sortOrder =// set sortOrder so cursor is in correct order
             "${TasksContract.Columns.TASK_SORT_ORDER}, ${TasksContract.Columns.TASK_NAME}"
         viewModelScope.launch(Dispatchers.IO) {
-            val cursor = getApplication<Application>().contentResolver.query(
-                TasksContract.CONTENT_URI, projection, null, null, sortOrder
-            )
+            val cursor =
+                getApplication<Application>().contentResolver.query(
+                    TasksContract.CONTENT_URI, projection, null, null, sortOrder
+                )
             dbCursor.postValue(cursor!!) // runs setValue via Handler in MainThread
         }
         Log.d(TAG, "$func done")
-
     }
 
-    fun saveTask(task: Task) : Task{
+    fun saveTask(task: Task): Task {
         val func = "saveTask"
         val values = ContentValues()
         if (task.name.isNotEmpty()) {

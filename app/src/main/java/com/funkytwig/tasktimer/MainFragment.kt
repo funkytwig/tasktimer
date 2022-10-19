@@ -11,13 +11,15 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.funkytwig.tasktimer.databinding.FragmentMainBinding
 
-
 private const val TAG = "MainFragmentXX"
+private const val DIALOG_ID_DELETE = 1 // Dialog ID for delete dialog
+private const val DIALOG_TASK_ID = "task_id" // Dialog Bundle Task ID label
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner {
+class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner,
+    AppDialog.DialogEvents {
 
     interface OnTaskEdit {
         fun onTaskEdit(task: Task)
@@ -69,7 +71,7 @@ class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner {
     override fun onAttach(context: Context) {
         Log.d(TAG, "onAttach")
         super.onAttach(context)
-        if (context !is OnTaskEdit) throw RuntimeException("$context must implement OnTaskEdit")
+        if (context !is OnTaskEdit) throw RuntimeException("$TAG: $context must implement OnTaskEdit")
     }
 
     override fun onEditClick(task: Task) {
@@ -77,7 +79,26 @@ class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner {
     }
 
     override fun onDeleteClick(task: Task) {
-        viewModel.deleteTask(task.id)
+        val args = Bundle().apply {
+            putInt(DIALOG_ID, DIALOG_ID_DELETE)
+            putString(DIALOG_MESSAGE, getString(R.string.deldiag_message, task.id, task.name))
+            putInt(DIALOG_POSITIVE_RID, R.string.deldiag_postative_caltion) // pass string ID
+            putLong(DIALOG_TASK_ID, task.id)
+        }
+        val dialog = AppDialog()
+        dialog.arguments = args
+        dialog.show(childFragmentManager, null)
+    }
+
+    override fun onPositiveDialogResult(dialogId: Int, args: Bundle) {
+        if (dialogId == DIALOG_ID_DELETE) {
+            val taskId = args.getLong(DIALOG_TASK_ID)
+            // Assertions used to wan developers
+            if (BuildConfig.DEBUG && taskId == 0L) throw AssertionError("Task ID is zero")
+            viewModel.deleteTask(taskId)
+        } else throw IllegalArgumentException(
+            "$TAG: onPositiveDialogResult does not implement dialog ID $dialogId"
+        )
     }
 
     override fun onTaskLongClick(task: Task) {
