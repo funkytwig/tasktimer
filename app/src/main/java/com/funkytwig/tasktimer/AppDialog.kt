@@ -21,24 +21,27 @@ class AppDialog : AppCompatDialogFragment() { // note fragments cant have parame
 
     interface DialogEvents {
         fun onPositiveDialogResult(dialogId: Int, args: Bundle)
-     // fun onNegativeDialogResult(dialogId: Int, args: Bundle)
-     // fun onDialogCancelled(dialogId: Int)
+        // fun onNegativeDialogResult(dialogId: Int, args: Bundle)
+        // fun onDialogCancelled(dialogId: Int)
     }
 
     override fun onAttach(context: Context) {
         Log.d(TAG, "onAttach")
         super.onAttach(context)
         // Check callback implemented
+        if (parentFragment == null) // Not sure why this is needed, I added it to tutorial
+            throw java.lang.NullPointerException("Fragment is null implement AppDialog.DialogEvents interface")
         dialogEvents = try { // Is there a parent fragment, if so that is what we will callback
             parentFragment as DialogEvents
         } catch (e: TypeCastException) {
             try { // no parent fragment so we callback Activity instead
                 context as DialogEvents
             } catch (e: TypeCastException) {
-                throw java.lang.ClassCastException("Activity $context must implement AppDialog.DialogEvents interface")
+                throw ClassCastException("Activity $context must implement AppDialog.DialogEvents interface (${e.message})")
+
             }
         } catch (e: java.lang.ClassCastException) {
-            throw java.lang.ClassCastException("Fragment $parentFragment must implement AppDialog.DialogEvents interface")
+            throw ClassCastException("Fragment $parentFragment must implement AppDialog.DialogEvents interface (${e.message})")
         }
     }
 
@@ -88,11 +91,11 @@ class AppDialog : AppCompatDialogFragment() { // note fragments cant have parame
 
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        Log.d(TAG, "onDismiss")
-        super.onDismiss(dialog)
-        //dialogEvents?.onDialogCancelled(dialog)
-    }
+//    override fun onDismiss(dialog: DialogInterface) {
+//        Log.d(TAG, "onDismiss")
+//        super.onDismiss(dialog)
+//        //dialogEvents?.onDialogCancelled(dialog)
+//    }
 
     override fun onDetach() {
         Log.d(TAG, "onDetach")

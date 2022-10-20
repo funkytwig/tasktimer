@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import com.funkytwig.tasktimer.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivityXX"
+private const val DIALOG_ID_CANCEL_EDIT = 1
 
 class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainFragment.OnTaskEdit {
     private var mTwoPain = false // are we in two pain mode (tablet/landscape)
@@ -87,10 +88,17 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainFra
         Log.d(TAG, item.itemId.toString())
         when (item.itemId) {
             R.id.menumain_addTask -> taskEditAdd(null)
+
             android.R.id.home -> {
-                Log.d(TAG, "onOptionsItemSelected: home button pressed")
                 val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
-                removeEditPane(fragment)
+                if ((fragment is AddEditFragment) && fragment.isDirty()) // repeated code 3 down
+                    showConformationDialogue(
+                        DIALOG_ID_CANCEL_EDIT,
+                        getString(R.string.cancelEnigDiag_message),
+                        R.string.cancelEditDiag_positive_caption,
+                        R.string.cancelEditDiag_negative_caption
+                    )
+                else removeEditPane(fragment)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -117,7 +125,14 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainFra
         if (fragment == null || mTwoPain) {
             super.onBackPressed()
         } else {
-            removeEditPane(fragment)
+            if ((fragment is AddEditFragment) && fragment.isDirty()) // repeated code 3 up
+                showConformationDialogue(
+                    DIALOG_ID_CANCEL_EDIT,
+                    getString(R.string.cancelEnigDiag_message),
+                    R.string.cancelEditDiag_positive_caption,
+                    R.string.cancelEditDiag_negative_caption
+                )
+            else removeEditPane(fragment)
         }
     }
 }

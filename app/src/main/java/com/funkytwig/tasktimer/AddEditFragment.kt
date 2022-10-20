@@ -100,6 +100,22 @@ class AddEditFragment : Fragment() {
         return newTask
     }
 
+
+    fun isDirty(): Boolean {
+        // returns true if newTask does not equal the task we are editing.
+        // In the case of adding a task, task will be null and will not equal new task.
+        // This can cause a problem.  Function deals with that by also checking name and description
+        // are not empty and if sortOrder has changed from default of zero.
+        // without those checked we would get Dialog if we tried to leave a new task even if nothing
+        // had been types.  Try removing second compound condition if you are not sure why it is nessesery.
+        // if task and newTask are equal user has not made any changes and we return false.
+        val newTask = taskFromUi()
+        return (
+                (newTask != task) &&
+                        (newTask.name.isNotBlank() || newTask.description.isNotBlank() || newTask.sortOrder != 0)
+                )
+    }
+
     private fun saveTask() {
         Log.d(TAG, "saveTask")
         val newTask = taskFromUi()
