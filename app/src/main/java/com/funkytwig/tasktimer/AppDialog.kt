@@ -26,27 +26,32 @@ class AppDialog : AppCompatDialogFragment() { // note fragments cant have parame
     }
 
     override fun onAttach(context: Context) {
-        Log.d(TAG, "onAttach")
+        val func = "onAttach"
+        Log.d(TAG, func)
         super.onAttach(context)
-        // Check callback implemented
-        if (parentFragment == null) // Not sure why this is needed, I added it to tutorial
-            throw java.lang.NullPointerException("Fragment is null implement AppDialog.DialogEvents interface")
-        dialogEvents = try { // Is there a parent fragment, if so that is what we will callback
+        // Activities/Fragments containing this fragment must implement its callbacks.
+        Log.d(TAG, "$func: parentFragment=$parentFragment")
+        dialogEvents = try {
+            // Is there a parent fragment? If so, that will be what we call back
             parentFragment as DialogEvents
-        } catch (e: TypeCastException) {
-            try { // no parent fragment so we callback Activity instead
+        } catch (e: NullPointerException) { // Was TypeCastException in tutorial
+            try {
+                // No parent fragment, so call back the Activity instead
                 context as DialogEvents
-            } catch (e: TypeCastException) {
-                throw ClassCastException("Activity $context must implement AppDialog.DialogEvents interface (${e.message})")
-
+            } catch (e: ClassCastException) {
+                // Activity doesn't implement the interface
+                throw ClassCastException("Activity $context must implement AppDialog.DialogEvents interface")
             }
-        } catch (e: java.lang.ClassCastException) {
-            throw ClassCastException("Fragment $parentFragment must implement AppDialog.DialogEvents interface (${e.message})")
+        } catch (e: ClassCastException) {
+            // Parent fragment doesn't implement the interface
+            throw ClassCastException("Fragment $parentFragment must implement AppDialog.DialogEvents interface")
+        } catch (e: Exception) {
+            throw Exception(" ${e.toString()}")
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Log.d(TAG, "onAttach")
+        Log.d(TAG, "onCreateDialog")
         val builder = AlertDialog.Builder(requireContext())
 
         val arguments = arguments // Smart Cast Hack

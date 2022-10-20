@@ -110,10 +110,9 @@ class AddEditFragment : Fragment() {
         // had been types.  Try removing second compound condition if you are not sure why it is nessesery.
         // if task and newTask are equal user has not made any changes and we return false.
         val newTask = taskFromUi()
-        return (
-                (newTask != task) &&
-                        (newTask.name.isNotBlank() || newTask.description.isNotBlank() || newTask.sortOrder != 0)
-                )
+        val dirty = (newTask != task) &&
+                (newTask.name.isNotBlank() || newTask.description.isNotBlank() || newTask.sortOrder != 0)
+        return dirty
     }
 
     private fun saveTask() {
@@ -122,8 +121,6 @@ class AddEditFragment : Fragment() {
         if (newTask != task) { // not the same
             task = viewModel.saveTask(newTask) // get task returned as amy have id
         }
-
-
     }
 
     override fun onAttach(context: Context) {

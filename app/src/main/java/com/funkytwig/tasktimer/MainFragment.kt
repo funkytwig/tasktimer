@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewbinding.BuildConfig
 import com.funkytwig.tasktimer.databinding.FragmentMainBinding
 
 private const val TAG = "MainFragmentXX"
@@ -82,7 +83,7 @@ class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner,
         val args = Bundle().apply {
             putInt(DIALOG_ID, DIALOG_ID_DELETE)
             putString(DIALOG_MESSAGE, getString(R.string.deldiag_message, task.id, task.name))
-            putInt(DIALOG_POSITIVE_RID, R.string.deldiag_postative_caltion) // pass string ID
+            putInt(DIALOG_POSITIVE_RID, R.string.deldiag_postative_caption) // pass string ID
             putLong(DIALOG_TASK_ID, task.id)
         }
         val dialog = AppDialog()

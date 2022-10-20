@@ -7,14 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import com.funkytwig.tasktimer.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivityXX"
 private const val DIALOG_ID_CANCEL_EDIT = 1
 
-class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainFragment.OnTaskEdit {
+class MainActivity : AppCompatActivity(),
+    AddEditFragment.OnSaveClicked, MainFragment.OnTaskEdit, AppDialog.DialogEvents {
     private var mTwoPain = false // are we in two pain mode (tablet/landscape)
 
     //    private lateinit var appBarConfiguration: AppBarConfiguration
@@ -81,24 +81,22 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainFra
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d(TAG, "onOptionsItemSelected")
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        Log.d(TAG, item.itemId.toString())
         when (item.itemId) {
             R.id.menumain_addTask -> taskEditAdd(null)
 
             android.R.id.home -> {
                 val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
-                if ((fragment is AddEditFragment) && fragment.isDirty()) // repeated code 3 down
+                if ((fragment is AddEditFragment) && fragment.isDirty()) { // repeated code 3 down
                     showConformationDialogue(
                         DIALOG_ID_CANCEL_EDIT,
                         getString(R.string.cancelEnigDiag_message),
                         R.string.cancelEditDiag_positive_caption,
                         R.string.cancelEditDiag_negative_caption
                     )
-                else removeEditPane(fragment)
+                } else removeEditPane(fragment)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -125,14 +123,21 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainFra
         if (fragment == null || mTwoPain) {
             super.onBackPressed()
         } else {
-            if ((fragment is AddEditFragment) && fragment.isDirty()) // repeated code 3 up
+            if ((fragment is AddEditFragment) && fragment.isDirty()) { // repeated code 3 up
                 showConformationDialogue(
                     DIALOG_ID_CANCEL_EDIT,
                     getString(R.string.cancelEnigDiag_message),
                     R.string.cancelEditDiag_positive_caption,
                     R.string.cancelEditDiag_negative_caption
                 )
-            else removeEditPane(fragment)
+            } else removeEditPane(fragment)
         }
+    }
+
+    override fun onPositiveDialogResult(dialogId: Int, args: Bundle) {
+        if (dialogId == DIALOG_ID_CANCEL_EDIT) {
+            val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+            removeEditPane()
+        } else throw RuntimeException("Dialog ID $dialogId not implemented")
     }
 }
