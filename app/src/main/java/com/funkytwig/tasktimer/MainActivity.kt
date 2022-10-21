@@ -30,7 +30,8 @@ class MainActivity : AppCompatActivity(),
 
         // Get up two pain display
         mTwoPain = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+     // val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+        val fragment = findFragmentById(R.id.task_details_container)
         if (fragment != null) {// we have a fragment
             // There was an existing fragment to edit/add a task so make sure pains are set up correctly
             showEditPain()
@@ -55,9 +56,10 @@ class MainActivity : AppCompatActivity(),
         // to fragment before removing it unless Save button it tapped so makes sense to pass it in
         // var fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
         if (fragment != null) {
-            supportFragmentManager.beginTransaction()
-                .remove(fragment)
-                .commit()
+//            supportFragmentManager.beginTransaction()
+//                .remove(fragment)
+//                .commit()
+            removeFragment(fragment)
         }
         // Set visibility of right-hand pane
         binding.contentMain.taskDetailsContainer.visibility =
@@ -69,7 +71,8 @@ class MainActivity : AppCompatActivity(),
 
     override fun onSaveClicked() {
         Log.d(TAG, "onSaveClicked")
-        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+     // val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+        val fragment = findFragmentById(R.id.task_details_container)
         removeEditPane(fragment)
     }
 
@@ -88,7 +91,8 @@ class MainActivity : AppCompatActivity(),
             R.id.menumain_addTask -> taskEditAdd(null)
 
             android.R.id.home -> {
-                val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+             // val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+                val fragment = findFragmentById(R.id.task_details_container)
                 if ((fragment is AddEditFragment) && fragment.isDirty()) { // repeated code 3 down
                     showConformationDialogue(
                         DIALOG_ID_CANCEL_EDIT,
@@ -110,16 +114,19 @@ class MainActivity : AppCompatActivity(),
     private fun taskEditAdd(task: Task?) {
         val func = "taskEditAdd"
         Log.d(TAG, func)
-        val newFragment = AddEditFragment.newInstance(task)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.task_details_container, newFragment)
-            .commit()
+      //  val newFragment = AddEditFragment.newInstance(task)
+      //  supportFragmentManager.beginTransaction()
+      //      .replace(R.id.task_details_container, newFragment)
+      //      .commit()
+        replaceFragment(AddEditFragment.newInstance(task), R.id.task_details_container)
         showEditPain()
         Log.d(TAG, "$func done")
     }
 
     override fun onBackPressed() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+        // TODO: https://codelabs.developers.google.com/handling-gesture-back-navigation#0
+     // val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+        val fragment = findFragmentById(R.id.task_details_container)
         if (fragment == null || mTwoPain) {
             super.onBackPressed()
         } else {
@@ -136,8 +143,9 @@ class MainActivity : AppCompatActivity(),
 
     override fun onPositiveDialogResult(dialogId: Int, args: Bundle) {
         if (dialogId == DIALOG_ID_CANCEL_EDIT) {
-            val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
-            removeEditPane()
+         // val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+            val fragment = findFragmentById(R.id.task_details_container)
+            removeEditPane(fragment)
         } else throw RuntimeException("Dialog ID $dialogId not implemented")
     }
 }
