@@ -25,9 +25,13 @@
     <string name="instructions">Use the add button (+) in the toolbar above to create new tasks.\n\nTasks with lower sort orders will be placed higher up the list.Tasks with the same sort order will be sorted alphabetically.\n\nTapping a task will start the timer for that task (and will stop the timer for any previous task that was being timed).\n\nEach task has Edit and Delete buttons if you want to change the details or remove the task.</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-       <string name="deldiag_postative_caption">Delete</string>
-       <string name="deldiag_message">Delete will also delete timings data for task %1$d: %2$s.</string>
-       <string name="cancelEnigDiag_message">You have unsaved changes.  Abandon changes or continue editing</string>
-       <string name="cancelEditDiag_positive_caption">Abandon Changes</string>
-       <string name="cancelEditDiag_negative_caption">Continue Editing</string>
-   </resources>
+    <string name="deldiag_postative_caption">Delete</string>
+    <string name="deldiag_message">Delete will also delete timings data for task %1$d: %2$s.</string>
+    <string name="cancelEnigDiag_message">You have unsaved changes.  Abandon changes or continue editing</string>
+    <string name="cancelEditDiag_positive_caption">Abandon Changes</string>
+    <string name="cancelEditDiag_negative_caption">Continue Editing</string>
+    <string name="about_copyrite">Copyright \u00a9 2019 Ben Edwards</string>
+    <string name="about_weblink">Instructions available at www.funkytwig.com/tasktimer</string>
+    <string name="about_email">For support email tasktimer@funkytwig.com</string>
+    <string name="about_credits">For support email tasktimer@funkytwig.com</string>
+</resources>
