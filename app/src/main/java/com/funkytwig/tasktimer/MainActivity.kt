@@ -1,6 +1,9 @@
 package com.funkytwig.tasktimer
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -10,10 +13,14 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.funkytwig.tasktimer.databinding.ActivityMainBinding
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import java.util.regex.Pattern
 
 private const val TAG = "MainActivityXX"
 private const val DIALOG_ID_CANCEL_EDIT = 1
+
+// TODO About menu not working in landscape
 
 class MainActivity : AppCompatActivity(),
     AddEditFragment.OnSaveClicked, MainFragment.OnTaskEdit, AppDialog.DialogEvents {
@@ -114,16 +121,38 @@ class MainActivity : AppCompatActivity(),
         // Must be called before create.
         builder.setTitle(R.string.app_name)
         builder.setIcon(R.mipmap.ic_launcher)
+        builder.setPositiveButton(R.string.ok) { _, _ -> // add OK button
+            if (aboutDialog != null && aboutDialog?.isShowing == true) aboutDialog?.dismiss()
+        }
 
         aboutDialog = builder.setView(messageView).create()
         aboutDialog?.setCanceledOnTouchOutside(true) // default behaviour, important as no buttons
+
+        // not ideal as con and title are not part of the view & has links
+        // messageView.setOnClickListener{
+        //     if (aboutDialog != null && aboutDialog?.isShowing == true) aboutDialog?.dismiss()
+        // }
 
         // cant use synthetic import as we have to look for ID in messageView
         val aboutVersion = messageView.findViewById<TextView>(R.id.aboutVerison)
         aboutVersion.text = BuildConfig.VERSION_NAME
 
+        // Use a nullable type: the TextView won't exist on API 21 and higher
+        val aboutUrl: TextView? = messageView.findViewById(R.id.aboutUrl)
+        aboutUrl?.setOnClickListener { v ->
+            val intent = Intent(Intent.ACTION_VIEW)
+            val s = (v as TextView).text.toString()
+            intent.data = Uri.parse(s)
+            try {
+                startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(this@MainActivity, R.string.about_url_error, Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
         aboutDialog?.show()
     }
+
 
     // to stop above memory leaking when we rotate.  This si why we have aboutDialog as val.
     override fun onStop() {

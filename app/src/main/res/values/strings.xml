@@ -31,7 +31,10 @@
     <string name="cancelEditDiag_positive_caption">Abandon Changes</string>
     <string name="cancelEditDiag_negative_caption">Continue Editing</string>
     <string name="about_copyrite">Copyright \u00a9 2019 Ben Edwards</string>
-    <string name="about_weblink">Instructions available at www.funkytwig.com/tasktimer</string>
+    <string name="about_weblink_v21">Instructions available at funkytwig.com</string>
+    <string name="about_weblink">Instructions available at</string>
+    <string name="about_url"><u>"https://www.funkytwig.com"</u></string>
     <string name="about_email">For support email tasktimer@funkytwig.com</string>
     <string name="about_credits">For support email tasktimer@funkytwig.com</string>
+    <string name="about_url_error">No browser application found, cannot visit web</string>
 </resources>
