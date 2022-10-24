@@ -15,7 +15,6 @@ import com.funkytwig.tasktimer.databinding.ActivityMainBinding
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import java.util.regex.Pattern
 
 private const val TAG = "MainActivityXX"
 private const val DIALOG_ID_CANCEL_EDIT = 1
@@ -99,6 +98,10 @@ class MainActivity : AppCompatActivity(),
         when (item.itemId) {
             R.id.menumain_addTask -> taskEditAdd(null)
             R.id.menumain_showAbout -> showAboutDialog()
+            R.id.menumain_settings -> {
+                val dialog = SettingsDialog()
+                dialog.show(supportFragmentManager, null)
+            }
             android.R.id.home -> {
                 val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
                 if ((fragment is AddEditFragment) && fragment.isDirty()) { // repeated code 3 down
