@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.BuildConfig
 import com.funkytwig.tasktimer.databinding.FragmentMainBinding
@@ -61,6 +62,10 @@ class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner,
         binding.taskList.layoutManager =
             LinearLayoutManager(context) // Set layout manager to Linear
         binding.taskList.adapter = mAdapter // Attach Adapter to Recyclerview
+
+        viewModel.timing.observe(
+            viewLifecycleOwner, Observer<String> { timing -> binding.currentTask.text = timing }
+        )
     }
 
     override fun onDestroyView() {
@@ -75,11 +80,14 @@ class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner,
         if (context !is OnTaskEdit) throw RuntimeException("$TAG: $context must implement OnTaskEdit")
     }
 
+    // CursorRecyclerViewAdapter.OnTaskClickListner interface
     override fun onEditClick(task: Task) {
         (activity as OnTaskEdit?)?.onTaskEdit(task) // think we do it like this as cant get listner passed to Fragment
     }
 
+    // CursorRecyclerViewAdapter.OnTaskClickListner interface
     override fun onDeleteClick(task: Task) {
+        // Show delete confirmation dialog, onPositiveDialogResult at end called if user clicks OK
         val args = Bundle().apply {
             putInt(DIALOG_ID, DIALOG_ID_DELETE)
             putString(DIALOG_MESSAGE, getString(R.string.deldiag_message, task.id, task.name))
@@ -91,18 +99,20 @@ class MainFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListner,
         dialog.show(childFragmentManager, null)
     }
 
+    // CursorRecyclerViewAdapter.OnTaskClickListner interface
+    override fun onTaskLongClick(task: Task) {
+        Log.d(TAG, "onTaskLongClick: $task")
+        viewModel.timeTask(task)
+    }
+
     override fun onPositiveDialogResult(dialogId: Int, args: Bundle) {
         if (dialogId == DIALOG_ID_DELETE) {
             val taskId = args.getLong(DIALOG_TASK_ID)
-            // Assertions used to wan developers
+            // Assertions used to warn developers
             if (BuildConfig.DEBUG && taskId == 0L) throw AssertionError("Task ID is zero")
             viewModel.deleteTask(taskId)
         } else throw IllegalArgumentException(
             "$TAG: onPositiveDialogResult does not implement dialog ID $dialogId"
         )
-    }
-
-    override fun onTaskLongClick(task: Task) {
-        TODO("Not yet implemented")
     }
 }

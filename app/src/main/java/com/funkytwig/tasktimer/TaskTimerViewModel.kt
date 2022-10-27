@@ -24,15 +24,21 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    private var currentTiming: Timing? = null
+
     private val dbCursor = MutableLiveData<Cursor>()
-    val cursor: LiveData<Cursor>
-        get() = dbCursor
+    val cursor: LiveData<Cursor> get() = dbCursor
+
+    // LiveData item for Current Task name on MainFragment
+    private val taskTimings = MutableLiveData<String>()
+    val timing: LiveData<String> get() = taskTimings
 
     init {
         Log.d(TAG, "init")
         getApplication<Application>().contentResolver.registerContentObserver(
             TasksContract.CONTENT_URI, true, contentObserver
         )
+        currentTiming = retrieveTiming() // put first so user cant start another task
         loadTasks()
     }
 
@@ -55,6 +61,34 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
             dbCursor.postValue(cursor!!) // runs setValue via Handler in MainThread
         }
         Log.d(TAG, "$func done")
+    }
+
+    fun retrieveTiming(): Timing? {
+        val func = "retrieveTiming"
+        Log.d(TAG, func)
+        // Get currentTiming record if app closed and timing was happening
+        val timing: Timing?
+
+        val timimgCursor: Cursor? = getApplication<Application>().contentResolver.query(
+            CurrentTimingContract.CONTENT_URI, null, // all columns
+            null, null, null
+        )
+
+        // access DB on main thread so tasktimings LiveData gets updated before tasks shown so they
+        // cant long tap a task first
+        if (timimgCursor != null && timimgCursor.moveToFirst()) {
+            val id = timimgCursor.getLong(timimgCursor.getColumnIndex(CurrentTimingContract.Columns.TIMINGS_ID))
+            val taskId = timimgCursor.getLong(timimgCursor.getColumnIndex(CurrentTimingContract.Columns.TIMING_TASK_ID))
+            val startTime = timimgCursor.getLong(timimgCursor.getColumnIndex(CurrentTimingContract.Columns.TIMING_START_TIME))
+            val name = timimgCursor.getString(timimgCursor.getColumnIndex(CurrentTimingContract.Columns.TASK_NAME))
+            timing = Timing(taskId, startTime, id)
+            taskTimings.value = name // Update LiveData object
+        } else {
+            timing = null
+        }
+
+        timimgCursor?.close()
+        return timing
     }
 
     fun saveTask(task: Task): Task {
@@ -94,6 +128,80 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
             )
         }
     }
+
+    fun timeTask(task: Task) { // Called when user long tappes a task
+        val func = "timeTask"
+        Log.d(TAG, "$func ${currentTiming.toString()}")
+        val timingRecord = currentTiming // Smart Task Hack TODO: try without this, hacks not good
+
+        if (timingRecord == null) { // no task being timed, start new timing on current task
+            Log.d(TAG, "$func: New task timer started")
+            currentTiming = Timing(task.id) // TODO: repeated code, make function
+            saveTiming(currentTiming!!)
+        } else { // task being timed, update duration and save it (i.e. stop it)
+            Log.d(TAG, "$func: Timer running, stop it")
+            timingRecord.setDuration()
+            saveTiming(currentTiming!!)
+
+            if (task.id == timingRecord!!.taskId) { // Current record tapped a second time, stop timing
+                Log.d(TAG, "$func: We long tapped on current timer")
+                currentTiming = null // Timing  saves, reset ready for new Timing
+            } else { // User long taped a different task, we have stopped current task already
+                Log.d(TAG, "$func: We long tapped on a different timer")
+                currentTiming = Timing(task.id) // TODO: repeated code, make function
+                saveTiming(currentTiming!!) // This will insert new timing with 0 duration
+                // alternative solution without !!
+                // val newTiming = Timing(task.id)
+                // saveTiming(newTiming)
+                // currentTiming = newTiming
+                // nut !! probably better as you may roget to do last line
+            }
+        }
+
+
+        // update the LiveData used for current task message
+        taskTimings.value = // TODO: Should make Currently Timing a string resource
+            if (currentTiming != null)
+                getApplication<Application>().resources.getString(
+                    R.string.timing_message, task.name
+                )
+            else
+                getApplication<Application>().resources.getString(R.string.no_task_message)
+    }
+
+    private fun saveTiming(currentTiming: Timing) {
+        val func = "saveTiming"
+        Log.d(TAG, "$func $currentTiming")
+
+        val inserting = (currentTiming.duration == 0L) // If duration is 0 insert else update row
+
+        val values = ContentValues().apply {
+            if (inserting) { // These are not needed for update
+                put(TimingsContract.Columns.TIMING_TASK_ID, currentTiming.taskId)
+                put(TimingsContract.Columns.TIMING_START_TIME, currentTiming.startTime)
+            }
+            put(TimingsContract.Columns.TIMING_DURATION, currentTiming.duration)
+        }
+
+        Log.d(TAG, "$func: values=$values")
+
+        viewModelScope.launch(Dispatchers.IO) {
+            if (inserting) {
+                val uri = getApplication<Application>().contentResolver.insert(
+                    TimingsContract.CONTENT_URI, values
+                )
+                if (uri != null) {
+                    currentTiming.id = TimingsContract.getId(uri) // put ID back into timing object
+                } // ?else I think we should throw an error?
+            } else {
+                getApplication<Application>().contentResolver.update(
+                    TimingsContract.buildUriFromId(currentTiming.id),
+                    values, null, null
+                )
+            }
+        }
+    }
+
 
     override fun onCleared() {
         getApplication<Application>().contentResolver.unregisterContentObserver(contentObserver)

@@ -37,4 +37,5 @@
     <string name="about_email">For support email tasktimer@funkytwig.com</string>
     <string name="about_credits">For support email tasktimer@funkytwig.com</string>
     <string name="about_url_error">No browser application found, cannot visit web</string>
+    <string name="timing_message">Currently Timing: %1$s</string>
 </resources>

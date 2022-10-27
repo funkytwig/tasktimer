@@ -31,3 +31,8 @@ object TimingsContract {
         return ContentUris.withAppendedId(CONTENT_URI, id) // Append id to end of path
     }
 }
+
+//SELECT   tim.${TimingsContract.Columns.ID},
+//tim.${TimingsContract.Columns.TIMING_TASK_ID},
+//tim.${TimingsContract.Columns.TIMING_START_TIME},
+//tim.${TasksContract.Columns.TASK_NAME}

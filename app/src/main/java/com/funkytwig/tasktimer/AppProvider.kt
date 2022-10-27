@@ -7,7 +7,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteQueryBuilder
 import android.net.Uri
 import android.util.Log
-
 import androidx.core.content.ContentProviderCompat.requireContext
 
 /**
@@ -24,6 +23,8 @@ private const val TASKS_ID = 101
 
 private const val TIMINGS = 200
 private const val TIMINGS_ID = 201
+
+private const val CURRENT_TIMINGS = 300
 
 private const val TASK_DURATIONS = 400
 private const val TASK_DURATIONS_ID = 401
@@ -43,12 +44,13 @@ class AppProvider : ContentProvider() {
         matcher.addURI(CONTENT_AUTHORITY, "${TasksContract.TABLE_NAME}/#", TASKS_ID) // #=number
         matcher.addURI(CONTENT_AUTHORITY, TimingsContract.TABLE_NAME, TIMINGS)
         matcher.addURI(CONTENT_AUTHORITY, "${TimingsContract.TABLE_NAME}/#", TIMINGS_ID)
+        matcher.addURI(CONTENT_AUTHORITY, CurrentTimingContract.TABLE_NAME, CURRENT_TIMINGS)
+
 //        matcher.addURI(CONTENT_AUTHORITY, DurationsContract.TABLE_NAME, TASK_DURATION)
 //        matcher.addURI(CONTENT_AUTHORITY, "${DurationsContract.TABLE_NAME}/#", TASK_DURATION_ID)
 
         return matcher
     }
-
 
     override fun onCreate(): Boolean {
         val func = "onCreate"
@@ -56,15 +58,15 @@ class AppProvider : ContentProvider() {
         return true // We are creating DB in AppDatabase singleton
     }
 
-
     override fun getType(uri: Uri): String? {
         val match = uriMatcher.match(uri)
-        Log.d(TAG,"getType match $match")
+        Log.d(TAG, "getType match $match")
         return when (match) {
             TASKS -> TasksContract.CONTENT_TYPE
             TASKS_ID -> TasksContract.CONTENT_ITEM_TYPE
             TIMINGS -> TimingsContract.CONTENT_TYPE
             TIMINGS_ID -> TimingsContract.CONTENT_ITEM_TYPE
+            CURRENT_TIMINGS -> CurrentTimingContract.CONTENT_ITEM_TYPE
 //            TASK_DURATIONS = timingsContract.CONTENT_TYPE
 //            TASK_DURATIONS_ID -> timingsContract.CONTENT_ITEM_TYPE
             else -> throw IllegalAccessException("Unknown Uri: $uri")
@@ -101,10 +103,11 @@ class AppProvider : ContentProvider() {
             TIMINGS_ID -> {
                 queryBuilder.tables = TimingsContract.TABLE_NAME
                 val timingsId = TimingsContract.getId(uri)
-                queryBuilder.appendWhereEscapeString("${TimingsContract.Columns.ID} = $timingsId")
                 queryBuilder.appendWhere("${TimingsContract.Columns.ID} =")
                 queryBuilder.appendWhereEscapeString("$timingsId")
             }
+
+            CURRENT_TIMINGS -> queryBuilder.tables = CurrentTimingContract.TABLE_NAME
 //
 //            TASK_DURATION -> queryBuilder.tables = DurationsContract.TABLE_NAME
 //
@@ -130,10 +133,9 @@ class AppProvider : ContentProvider() {
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
         // accepts a uri and return uri with ID added
         val func = "insert"
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, func)
-            logValues(values)
-        }
+        Log.d(TAG, func)
+        Log.d(TAG, "$func $values")
+
         if (values == null) throw IllegalAccessException("$func ContentValues can not be null")
 
         val recordId: Long
@@ -161,7 +163,7 @@ class AppProvider : ContentProvider() {
             }
             else -> throw IllegalAccessException("Unknown Uri: $uri")
         }
-        Log.d(TAG, "Created record Uri $returnUri")
+        Log.d(TAG, "$func Inserted Uri $returnUri")
         if (recordId > 0) context.contentResolver?.notifyChange(uri, null)
         return returnUri
     }
@@ -174,10 +176,8 @@ class AppProvider : ContentProvider() {
         selectionArgs: Array<out String>?
     ): Int {
         val func = "update"
-        if (BuildConfig.DEBUG) {
-            Log.d(TAG, "$func $uri")
-            logValues(values)
-        }
+        Log.d(TAG, "$func $uri")
+        Log.d(TAG, "$func: $values")
 
         if (values == null) throw IllegalAccessException("$func ContentValues can not be null")
 
@@ -212,7 +212,7 @@ class AppProvider : ContentProvider() {
             else -> throw IllegalAccessException("Unknown Uri: $uri")
         }
 
-        Log.d(TAG, "Created record Uri $uri Count $count")
+        Log.d(TAG, "$func: Updated Uri $uri Count $count")
         if (count > 0) context.contentResolver?.notifyChange(uri, null) // NEW
         return count
     }
@@ -251,14 +251,8 @@ class AppProvider : ContentProvider() {
             else -> throw IllegalAccessException("Unknown Uri: $uri")
         }
 
-        Log.d(TAG, "Delete record Uri $uri Count $count")
+        Log.d(TAG, "$func: Deleted Uri $uri Count $count")
         if (count > 0) context.contentResolver?.notifyChange(uri, null)
         return count
-    }
-
-    private fun logValues(values: ContentValues?) {
-        for (key in values!!.keySet()) {
-            Log.d(TAG, "logValues:$key=${values.get(key)}")
-        }
     }
 }
