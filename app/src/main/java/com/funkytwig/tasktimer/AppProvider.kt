@@ -27,7 +27,6 @@ private const val TIMINGS_ID = 201
 private const val CURRENT_TIMINGS = 300
 
 private const val TASK_DURATIONS = 400
-private const val TASK_DURATIONS_ID = 401
 
 val CONTENT_PROVIDER_URI: Uri = Uri.parse("content://$CONTENT_AUTHORITY") // usable outside app
 
@@ -38,16 +37,12 @@ class AppProvider : ContentProvider() {
         Log.d(TAG, "buildUriMatcher")
         val matcher = UriMatcher(UriMatcher.NO_MATCH) // NO_MATCH if root URi matched
 
-        // com.funkytwig.tasktimer.provider/Tasks
         matcher.addURI(CONTENT_AUTHORITY, TasksContract.TABLE_NAME, TASKS)
-        // com.funkytwig.tasktimer.provider/Tasks/ID
         matcher.addURI(CONTENT_AUTHORITY, "${TasksContract.TABLE_NAME}/#", TASKS_ID) // #=number
         matcher.addURI(CONTENT_AUTHORITY, TimingsContract.TABLE_NAME, TIMINGS)
         matcher.addURI(CONTENT_AUTHORITY, "${TimingsContract.TABLE_NAME}/#", TIMINGS_ID)
         matcher.addURI(CONTENT_AUTHORITY, CurrentTimingContract.TABLE_NAME, CURRENT_TIMINGS)
-
-//        matcher.addURI(CONTENT_AUTHORITY, DurationsContract.TABLE_NAME, TASK_DURATION)
-//        matcher.addURI(CONTENT_AUTHORITY, "${DurationsContract.TABLE_NAME}/#", TASK_DURATION_ID)
+        matcher.addURI(CONTENT_AUTHORITY, DurationsContract.TABLE_NAME, TASK_DURATIONS)
 
         return matcher
     }
@@ -58,7 +53,7 @@ class AppProvider : ContentProvider() {
         return true // We are creating DB in AppDatabase singleton
     }
 
-    override fun getType(uri: Uri): String? {
+    override fun getType(uri: Uri): String { // Get MIME type for Uri
         val match = uriMatcher.match(uri)
         Log.d(TAG, "getType match $match")
         return when (match) {
@@ -67,12 +62,10 @@ class AppProvider : ContentProvider() {
             TIMINGS -> TimingsContract.CONTENT_TYPE
             TIMINGS_ID -> TimingsContract.CONTENT_ITEM_TYPE
             CURRENT_TIMINGS -> CurrentTimingContract.CONTENT_ITEM_TYPE
-//            TASK_DURATIONS = timingsContract.CONTENT_TYPE
-//            TASK_DURATIONS_ID -> timingsContract.CONTENT_ITEM_TYPE
+            TASK_DURATIONS -> TimingsContract.CONTENT_TYPE
             else -> throw IllegalAccessException("Unknown Uri: $uri")
         }
     }
-
 
     override fun query(
         uri: Uri,
@@ -108,15 +101,8 @@ class AppProvider : ContentProvider() {
             }
 
             CURRENT_TIMINGS -> queryBuilder.tables = CurrentTimingContract.TABLE_NAME
-//
-//            TASK_DURATION -> queryBuilder.tables = DurationsContract.TABLE_NAME
-//
-//            TASK_DURATION_ID -> {
-//                queryBuilder.tables = DurationsContract.TABLE_NAME
-//                val durationId = DurationsContract.getId(uri)
-//                queryBuilder.appendWhere("${DurationsContract.Columns.ID} =")
-//                queryBuilder.appendWhereEscapeString("$durationId")
-//            }
+
+            TASK_DURATIONS -> queryBuilder.tables = DurationsContract.TABLE_NAME
 
             else -> throw IllegalAccessException("Unknown URI: $uri")
         }

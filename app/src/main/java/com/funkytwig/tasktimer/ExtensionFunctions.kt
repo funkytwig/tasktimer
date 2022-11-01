@@ -2,16 +2,23 @@ package com.funkytwig.tasktimer
 
 // TODO: Think we lost some functions from this file
 
+import android.app.Application
 import android.content.ContentValues
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.AndroidViewModel
 
 fun FragmentActivity.findFragmentById(id: Int): Fragment? {
     return supportFragmentManager.findFragmentById(id)
 }
+//fun AndroidViewModel.resource(stringId : Int, params: Any) : String {
+//    return getApplication<Application>().resources.getString(
+//        stringId, params
+//    )
+//}
 
 fun FragmentActivity.showConformationDialogue(
     id: Int,

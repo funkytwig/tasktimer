@@ -68,26 +68,35 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
         Log.d(TAG, func)
         // Get currentTiming record if app closed and timing was happening
         val timing: Timing?
-
-        val timimgCursor: Cursor? = getApplication<Application>().contentResolver.query(
+        val timingCursor: Cursor? = getApplication<Application>().contentResolver.query(
             CurrentTimingContract.CONTENT_URI, null, // all columns
             null, null, null
         )
 
-        // access DB on main thread so tasktimings LiveData gets updated before tasks shown so they
+        // access DB on main thread so taskTimings LiveData gets updated before tasks shown so they
         // cant long tap a task first
-        if (timimgCursor != null && timimgCursor.moveToFirst()) {
-            val id = timimgCursor.getLong(timimgCursor.getColumnIndex(CurrentTimingContract.Columns.TIMINGS_ID))
-            val taskId = timimgCursor.getLong(timimgCursor.getColumnIndex(CurrentTimingContract.Columns.TIMING_TASK_ID))
-            val startTime = timimgCursor.getLong(timimgCursor.getColumnIndex(CurrentTimingContract.Columns.TIMING_START_TIME))
-            val name = timimgCursor.getString(timimgCursor.getColumnIndex(CurrentTimingContract.Columns.TASK_NAME))
+        if (timingCursor != null && timingCursor.moveToFirst()) {
+            val id =
+                timingCursor.getLong(timingCursor.getColumnIndex(CurrentTimingContract.Columns.TIMINGS_ID))
+            val taskId =
+                timingCursor.getLong(timingCursor.getColumnIndex(CurrentTimingContract.Columns.TIMING_TASK_ID))
+            val startTime =
+                timingCursor.getLong(timingCursor.getColumnIndex(CurrentTimingContract.Columns.TIMING_START_TIME))
+            val name =
+                timingCursor.getString(timingCursor.getColumnIndex(CurrentTimingContract.Columns.TASK_NAME))
+
             timing = Timing(taskId, startTime, id)
-            taskTimings.value = name // Update LiveData object
+
+            taskTimings.value =
+                getApplication<Application>().resources.getString(R.string.timing_message, name)
+//            taskTimings.value = resources.getString(
+//                R.string.timing_message, name
+//            )
         } else {
             timing = null
         }
 
-        timimgCursor?.close()
+        timingCursor?.close()
         return timing
     }
 

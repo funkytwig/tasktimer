@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.funkytwig.tasktimer.databinding.TaskListItemsBinding
 
-private const val TAG = "CurRecViewAdapterXX"
+private const val TAG = "CurRecViewAdapter"
 
 class TaskViewHolder(private val binding: TaskListItemsBinding) :
     RecyclerView.ViewHolder(binding.root) {

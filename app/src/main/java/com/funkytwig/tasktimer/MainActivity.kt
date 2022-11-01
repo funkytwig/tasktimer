@@ -15,6 +15,7 @@ import com.funkytwig.tasktimer.databinding.ActivityMainBinding
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.funkytwig.tasktimer.debug.TestData
 
 private const val TAG = "MainActivityXX"
 private const val DIALOG_ID_CANCEL_EDIT = 1
@@ -84,6 +85,10 @@ class MainActivity : AppCompatActivity(),
         Log.d(TAG, "onCreateOptionsMenu")
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
+        if (BuildConfig.DEBUG) {
+            val generate = menu.findItem(R.id.menumain_generate)
+            generate.isVisible = true
+        }
         return true
     }
 
@@ -94,6 +99,7 @@ class MainActivity : AppCompatActivity(),
         when (item.itemId) {
             R.id.menumain_addTask -> taskEditAdd(null)
             R.id.menumain_showAbout -> showAboutDialog()
+            R.id.menumain_generate -> TestData.generateTextDate(contentResolver)
             R.id.menumain_settings -> {
                 val dialog = SettingsDialog()
                 dialog.show(supportFragmentManager, null)
@@ -174,7 +180,7 @@ class MainActivity : AppCompatActivity(),
         Log.d(TAG, "$func done")
     }
 
-    override fun onBackPressed() {
+    override fun onBackPressed() { // TODO: replace with non depreciated
         val fragment = findFragmentById(R.id.task_details_container)
         if (fragment == null || mTwoPain) {
             super.onBackPressed()
