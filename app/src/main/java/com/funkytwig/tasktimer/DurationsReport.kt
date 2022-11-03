@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.funkytwig.tasktimer.databinding.ActivityDurationsReportBinding
 import com.funkytwig.tasktimer.databinding.TaskDurationsBinding
 
+// Lets see if this makes it commit
+
 private const val TAG = "DurationsReportXX"
 
 enum class SortColumns { NAME, DESCRIPTION, START_DATE, DURATION }

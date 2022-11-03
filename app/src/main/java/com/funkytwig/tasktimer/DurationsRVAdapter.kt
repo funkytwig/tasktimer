@@ -11,6 +11,8 @@ import com.funkytwig.tasktimer.databinding.TaskDurationItemsBinding
 import java.util.Locale
 import java.lang.IllegalStateException
 
+// Lets see if this makes it commit
+
 private const val TAG = "DurationsRVAdapterXX"
 
 class DurationsRVAdapter(context: Context, private var cursor: Cursor?) :
