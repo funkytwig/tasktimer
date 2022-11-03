@@ -98,6 +98,7 @@ class MainActivity : AppCompatActivity(),
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
             R.id.menumain_addTask -> taskEditAdd(null)
+            R.id.menumain_showDurations -> startActivity(Intent(this, DurationsReport::class.java))
             R.id.menumain_showAbout -> showAboutDialog()
             R.id.menumain_generate -> TestData.generateTextDate(contentResolver)
             R.id.menumain_settings -> {

@@ -23,7 +23,7 @@
 
     <style name="Theme.TasksTimer.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="SettingsDialogStyle" parent = "Theme.MaterialComponents.DayNight.Dialog.Alert">
+    <style name="SettingsDialogStyle" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
         <item name="windowNoTitle">false</item>
     </style>
 </resources>

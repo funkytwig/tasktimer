@@ -38,4 +38,9 @@
     <string name="about_credits">For support email tasktimer@funkytwig.com</string>
     <string name="about_url_error">No browser application found, cannot visit web</string>
     <string name="timing_message">Currently Timing: %1$s</string>
+    <string name="td_text_name">Task Name</string>
+    <string name="td_text_date">Date</string>
+    <string name="td_text_duration">Duration</string>
+    <string name="td_text_description">Description</string>
+    <string name="title_activity_durations_report">DurationsReport</string>
 </resources>
