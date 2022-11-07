@@ -8,8 +8,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.funkytwig.tasktimer.databinding.TaskDurationItemsBinding
-import java.util.Locale
-import java.lang.IllegalStateException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 private const val TAG = "DurationsRVAdapterXX"
 
@@ -46,7 +47,7 @@ class DurationsRVAdapter(context: Context, private var cursor: Cursor?) :
             val totalDuration =
                 cursor.getLong(cursor.getColumnIndex(DurationsContract.Columns.DURATION))
             val userDate =
-                dateFormat.format(startTime * 1000)  // The database stores seconds, we need milliseconds
+                dateFormat.format(startTime * 1000) // The database stores seconds, we need milliseconds
             val totalTime = formatDuration(totalDuration)
 
             holder.bindings.tdName.text = name

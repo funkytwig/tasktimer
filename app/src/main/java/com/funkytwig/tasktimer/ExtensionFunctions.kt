@@ -65,3 +65,11 @@ fun ContentValues.toString(values: ContentValues?): String {
     if (output == "") return "ContentValues has no elements"
     return "ContentValues:$output"
 }
+
+fun Array<String?>.toString(array: Array<String>?): String {
+    if (array == null) return "null"
+    var output: String = ""
+    for (element in array) output += "$element 1"
+    if (output == "") return "ContentValues has no elements"
+    return "Array:$output"
+}

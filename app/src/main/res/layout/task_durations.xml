@@ -17,13 +17,11 @@
         android:text="@string/td_text_name"
         android:textAlignment="viewStart"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/td_start_heading"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintHorizontal_weight="2"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="spread" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/td_start_heading" />
 
     <TextView
         android:id="@+id/td_start_heading"
@@ -38,8 +36,8 @@
         android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/td_name_heading"
         app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintEnd_toStartOf="@+id/td_duration_heading"
-        app:layout_constraintStart_toEndOf="@+id/td_name_heading" />
+        app:layout_constraintStart_toEndOf="@+id/td_name_heading"
+        app:layout_constraintEnd_toStartOf="@+id/td_duration_heading" />
 
     <TextView
         android:id="@+id/td_duration_heading"
@@ -53,7 +51,6 @@
         android:textAlignment="viewStart"
         android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/td_start_heading"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/td_start_heading"
         app:layout_constraintEnd_toEndOf="parent" />

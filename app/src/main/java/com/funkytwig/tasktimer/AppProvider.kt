@@ -76,6 +76,7 @@ class AppProvider : ContentProvider() {
     ): Cursor? {
         val func = "query"
         Log.d(TAG, "$func for uri=$uri")
+
         val match = uriMatcher.match(uri)
 
         val queryBuilder = SQLiteQueryBuilder()
@@ -109,6 +110,7 @@ class AppProvider : ContentProvider() {
 
         val context = requireContext(this) // Get NotNull context for ContentProvider
         val db = AppDatabase.getInstance(context).readableDatabase
+        Log.d(TAG, "$func: projection=$projection, selection=$selection, selectionArgs=${selectionArgs.toString()}")
         val cursor =
             queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder)
         Log.d(TAG, "$func: ${cursor.count} rows returned") // TODO remove this line
@@ -133,7 +135,6 @@ class AppProvider : ContentProvider() {
 
         // writableDatabase and readableDatabase slow so do not call if invalid Uri
         val match = uriMatcher.match(uri)
-        Log.d(TAG, "$func: match=$match for uri=$uri")
         when (match) {
             TASKS -> {
                 recordId = db.insert(TasksContract.TABLE_NAME, null, values)
