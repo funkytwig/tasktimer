@@ -11,14 +11,12 @@ import com.funkytwig.tasktimer.databinding.TaskDurationItemsBinding
 import java.util.Locale
 import java.lang.IllegalStateException
 
-// Lets see if this makes it commit
-
 private const val TAG = "DurationsRVAdapterXX"
 
 class DurationsRVAdapter(context: Context, private var cursor: Cursor?) :
     RecyclerView.Adapter<DurationsRVAdapter.DurationsViewHolder>() {
 
-     inner class DurationsViewHolder(val bindings: TaskDurationItemsBinding) :
+    inner class DurationsViewHolder(val bindings: TaskDurationItemsBinding) :
         RecyclerView.ViewHolder(bindings.root)
 
     private val dateFormat = DateFormat.getDateFormat(context)
@@ -81,27 +79,36 @@ class DurationsRVAdapter(context: Context, private var cursor: Cursor?) :
 
         val numItems = itemCount
         val oldCursor = cursor
+
         cursor = newCursor
+        Log.d(TAG, "$func: cursor.count=${cursor?.count}")
 
         Log.d(TAG, "$func newCursor.count=${newCursor?.count}, oldCursor.cont=${oldCursor?.count}")
 
         if (newCursor != null) {
             Log.d(TAG, "$func notify the observers about the new cursor")
             // notify the observers about the new cursor
-            notifyDataSetChanged()
+            this.notifyDataSetChanged()
+            Log.d(TAG, "$func: notifyDataSetChanged")
         } else {
             Log.d(TAG, "$func Notify observer about lack of dataset")
             // Notify observer about lack of dataset, all of it from 0 to newItems,
             // i.e. whole range of records has gone
-            notifyItemRangeChanged(0, numItems)
+            this.notifyItemRangeChanged(0, numItems)
+            Log.d(TAG, "$func: notifyItemRangeChanged(0, $numItems)")
         }
         return oldCursor
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         val func = "onAttachedToRecyclerView"
-        Log.d(TAG, func)
+        Log.d(TAG, "$func: ${recyclerView.adapter.toString()}")
         super.onAttachedToRecyclerView(recyclerView)
-        Log.d(TAG, "$func done")
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        val func = "onDetachedFromRecyclerView"
+        Log.d(TAG, "$func: ${recyclerView.adapter.toString()}")
+        super.onDetachedFromRecyclerView(recyclerView)
     }
 }
