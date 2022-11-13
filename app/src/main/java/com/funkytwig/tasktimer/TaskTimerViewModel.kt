@@ -42,10 +42,11 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
         loadTasks()
     }
 
+    // Load task list into Live data cursor dbCursor
     private fun loadTasks() {
         val func = "loadTasks"
         Log.d(TAG, func)
-        val projection = arrayOf(
+        val projection = arrayOf( // could just use null
             TasksContract.Columns.ID,
             TasksContract.Columns.TASK_NAME,
             TasksContract.Columns.TASK_DESCRIPTION,
@@ -63,6 +64,8 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
         Log.d(TAG, "$func done")
     }
 
+    // Access CurrentTiming provider to get timing if there is a current timing being run and
+    // set the taskTimings Livedata to the description of the task currently being timed
     fun retrieveTiming(): Timing? {
         val func = "retrieveTiming"
         Log.d(TAG, func)
@@ -75,7 +78,7 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
 
         // access DB on main thread so taskTimings LiveData gets updated before tasks shown so they
         // cant long tap a task first
-        if (timingCursor != null && timingCursor.moveToFirst()) {
+        if (timingCursor != null && timingCursor.moveToFirst()) { // there is a task currently being times
             val id =
                 timingCursor.getLong(timingCursor.getColumnIndex(CurrentTimingContract.Columns.TIMINGS_ID))
             val taskId =
@@ -89,10 +92,7 @@ class TaskTimerViewModel(application: Application) : AndroidViewModel(applicatio
 
             taskTimings.value =
                 getApplication<Application>().resources.getString(R.string.timing_message, name)
-//            taskTimings.value = resources.getString(
-//                R.string.timing_message, name
-//            )
-        } else {
+        } else { // no task currently being times
             timing = null
         }
 

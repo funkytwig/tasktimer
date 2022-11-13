@@ -12,7 +12,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-private const val TAG = "DurationsRVAdapterXX"
+private const val TAG = "DurationsRVAdapter"
 
 class DurationsRVAdapter(context: Context, private var cursor: Cursor?) :
     RecyclerView.Adapter<DurationsRVAdapter.DurationsViewHolder>() {
@@ -49,6 +49,8 @@ class DurationsRVAdapter(context: Context, private var cursor: Cursor?) :
             val userDate =
                 dateFormat.format(startTime * 1000) // The database stores seconds, we need milliseconds
             val totalTime = formatDuration(totalDuration)
+
+            Log.d(TAG, "$startTime=startTime, userDate=$userDate")
 
             holder.bindings.tdName.text = name
             holder.bindings.tdDescription?.text = description
