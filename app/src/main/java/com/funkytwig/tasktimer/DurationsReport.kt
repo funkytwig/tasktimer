@@ -2,16 +2,15 @@ package com.funkytwig.tasktimer
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.funkytwig.tasktimer.databinding.ActivityDurationsReportBinding
 
 private const val TAG = "DurationsReportXX"
 
-class DurationsReport : AppCompatActivity() {
+class DurationsReport : AppCompatActivity(), View.OnClickListener {
     private val viewModel: DurationsViewModel by viewModels() // scope=activity
 
     private val reportAdapter by lazy { DurationsRVAdapter(this, null) }
@@ -22,17 +21,30 @@ class DurationsReport : AppCompatActivity() {
         val func = "onCreate"
         Log.d(TAG, func)
         super.onCreate(savedInstanceState)
-
         binding = ActivityDurationsReportBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val tdList: RecyclerView = findViewById(R.id.td_list);
-        tdList.layoutManager = LinearLayoutManager(this)
-        tdList.setHasFixedSize(true);
-        tdList.adapter = reportAdapter
+        // Setup adapter
+        binding.items.tdList.layoutManager = LinearLayoutManager(this)
+        binding.items.tdList.setHasFixedSize(true)
+        binding.items.tdList.adapter = reportAdapter
+        viewModel.cursor.observe(this) { cursor -> reportAdapter.swapCursor(cursor)?.close() }
 
-        viewModel.cursor.observe(this, Observer { cursor -> reportAdapter.swapCursor(cursor)?.close() })
+        binding.items.tdNameHeading.setOnClickListener(this)
+        binding.items.tdStartHeading.setOnClickListener(this) // But this does not
+        binding.items.tdDurationHeading.setOnClickListener(this)
+        binding.items.tdDescriptionHeading?.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View) {
+        Log.d(TAG,"onClick")
+        when (v.id) {
+            R.id.td_name_heading -> viewModel.sortOrder = SortColumns.NAME
+            R.id.td_description_heading -> viewModel.sortOrder = SortColumns.DESCRIPTION
+            R.id.td_start_heading -> viewModel.sortOrder = SortColumns.START_DATE
+            R.id.td_duration_heading -> viewModel.sortOrder = SortColumns.DURATION
+        }
     }
 }

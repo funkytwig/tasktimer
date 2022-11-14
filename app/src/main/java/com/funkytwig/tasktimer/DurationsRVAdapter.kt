@@ -8,8 +8,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.funkytwig.tasktimer.databinding.TaskDurationItemsBinding
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 private const val TAG = "DurationsRVAdapter"

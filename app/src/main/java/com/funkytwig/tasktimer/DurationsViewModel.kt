@@ -1,5 +1,6 @@
 package com.funkytwig.tasktimer
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.database.Cursor
 import android.util.Log
@@ -20,6 +21,7 @@ class DurationsViewModel(application: Application) : AndroidViewModel(applicatio
 
     var sortOrder = SortColumns.NAME
         set(order) {
+            Log.d(TAG, "sortOrder.set order=$order")
             if (field != order) {
                 field = order
                 loadData()
@@ -33,6 +35,7 @@ class DurationsViewModel(application: Application) : AndroidViewModel(applicatio
         loadData()
     }
 
+    @SuppressLint("Recycle")
     private fun loadData() {
         val func = "loadData"
         Log.d(TAG, func)
@@ -44,9 +47,10 @@ class DurationsViewModel(application: Application) : AndroidViewModel(applicatio
         }
         Log.d(TAG, "order=$order")
         viewModelScope.launch(Dispatchers.IO) {
-            val cursor = getApplication<Application>().contentResolver.query(
-                DurationsContract.CONTENT_URI, null, selection, selectionArgs, order
-            )
+            val cursor =
+                getApplication<Application>().contentResolver.query( // observer closes cursor
+                    DurationsContract.CONTENT_URI, null, selection, selectionArgs, order
+                )
             Log.d(TAG, "$func: cursor.count=${cursor?.count}")
             dbCursor.postValue(cursor!!)
         }

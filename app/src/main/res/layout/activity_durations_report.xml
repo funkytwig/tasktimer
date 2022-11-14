@@ -20,6 +20,8 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/task_durations" />
+    <include
+        android:id="@+id/items"
+        layout="@layout/task_durations" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
