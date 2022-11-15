@@ -29,7 +29,7 @@ class DatePickerFragment : AppCompatDialogFragment(), DatePickerDialog.OnDateSet
             title = arguments.getString(DATE_PICKER_TITLE)
 
             // if date passed use it otherwise use current date
-            val givenDate = Date(arguments.getLong(DATE_PICKER_DATE)) // New
+            val givenDate = Date(arguments.getLong(DATE_PICKER_DATE))
             if (givenDate != null) {
                 cal.time = givenDate
                 Log.d(TAG, "givenDate=$givenDate")
@@ -56,7 +56,7 @@ class DatePickerFragment : AppCompatDialogFragment(), DatePickerDialog.OnDateSet
         val func = "onDateSet"
         Log.d(TAG, func)
         // notify caller of the user -selected values
-        view.tag = dialogId // pass the ID back in the tag, to save the caler storing a copy
+        view.tag = dialogId // pass the ID back in the tag, to save the caller storing a copy
         (context as DatePickerDialog.OnDateSetListener?)?.onDateSet(view, year, month, dayOfMonth)
         Log.d(TAG, "$func: done")
     }

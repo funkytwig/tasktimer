@@ -14,10 +14,10 @@ import com.funkytwig.tasktimer.databinding.ActivityDurationsReportBinding
 
 private const val TAG = "DurationsReportXX"
 
-private const val DIALOG_FILTER = 1 // note default would be 0 NEW
-private const val DIALOG_DELETE = 2 // NEW
+private const val DIALOG_FILTER = 1 // note default would be
+private const val DIALOG_DELETE = 2
 
-class DurationsReport : AppCompatActivity(), DatePickerDialog.OnDateSetListener, // CHANGE
+class DurationsReport : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
     View.OnClickListener {
     private val viewModel: DurationsViewModel by viewModels() // scope=activity
 
@@ -69,8 +69,8 @@ class DurationsReport : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
                 return true
             }
             R.id.rm_filter_date -> {
-                showDatePickerDialog(getString(R.string.date_title_filter), DIALOG_FILTER) // NEW
-                return true // NEW
+                showDatePickerDialog(getString(R.string.date_title_filter), DIALOG_FILTER)
+                return true
             }
             R.id.rm_delete -> {}
         }
@@ -91,7 +91,7 @@ class DurationsReport : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         return super.onPrepareOptionsMenu(menu)
     }
 
-    private fun showDatePickerDialog(title: String, dialogId: Int) { // NEW
+    private fun showDatePickerDialog(title: String, dialogId: Int) {
         val func = "showDatePickerDialog"
         Log.d(TAG, func)
         val dialogFragment = DatePickerFragment()
@@ -99,13 +99,13 @@ class DurationsReport : AppCompatActivity(), DatePickerDialog.OnDateSetListener,
         val arguments = Bundle()
         arguments.putInt(DATE_PICKER_ID, dialogId)
         arguments.putString(DATE_PICKER_TITLE, title)
-        arguments.putLong(DATE_PICKER_DATE, viewModel.getFilterDate().time) // NEW
+        arguments.putLong(DATE_PICKER_DATE, viewModel.getFilterDate().time)
         dialogFragment.arguments = arguments
         dialogFragment.show(supportFragmentManager, "dataPicker")
         Log.d(TAG, "$func: done")
     }
 
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) { // NEW
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val func = "onDateSet"
         Log.d(TAG, func)
 

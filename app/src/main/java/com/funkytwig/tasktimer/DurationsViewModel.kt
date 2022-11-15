@@ -18,7 +18,7 @@ private const val TAG = "DurationsViewModelXX"
 enum class SortColumns { NAME, DESCRIPTION, START_DATE, DURATION }
 
 class DurationsViewModel(application: Application) : AndroidViewModel(application) {
-    private val calender = GregorianCalendar() // NEW
+    private val calender = GregorianCalendar()
 
     private val dbCursor = MutableLiveData<Cursor>()
     val cursor: LiveData<Cursor> get() = dbCursor
@@ -33,26 +33,26 @@ class DurationsViewModel(application: Application) : AndroidViewModel(applicatio
         }
 
     private val selection = "${DurationsContract.Columns.START_TIME} BETWEEN ? AND ?"
-    private var selectionArgs = emptyArray<String>() // CHANGE
+    private var selectionArgs = emptyArray<String>()
 
-    private var _displayWeek = true // NEW
+    private var _displayWeek = true
     val displayWeek: Boolean
         get() = _displayWeek
 
     init {
-        applyFilter() // CHANGE
+        applyFilter()
     }
 
-    fun toggleDisplayWeek() { // NEW
+    fun toggleDisplayWeek() {
         _displayWeek = !_displayWeek
-        applyFilter() // NEW
+        applyFilter()
     }
 
-    fun getFilterDate(): Date { // NEW
+    fun getFilterDate(): Date {
         return calender.time
     }
 
-    fun setReportDate(year: Int, month: Int, dayOfMonth: Int) { // NEW
+    fun setReportDate(year: Int, month: Int, dayOfMonth: Int) {
         if (calender.get(GregorianCalendar.YEAR) != year
             || calender.get(GregorianCalendar.MONTH) != month
             || calender.get(GregorianCalendar.DAY_OF_MONTH) != dayOfMonth
@@ -62,7 +62,7 @@ class DurationsViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun applyFilter() { // NEW
+    private fun applyFilter() {
         val func = "applyFilter"
         Log.d(TAG, func)
         val currentCalenderDate = calender.timeInMillis // store time so we can put if back
